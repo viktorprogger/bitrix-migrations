@@ -1,1 +1,1 @@
-# bitrix-migrations
+# bitrix-migrations (in development)
