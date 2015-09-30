@@ -1,0 +1,24 @@
+#!/usr/bin/env php
+<?php
+
+use Arrilot\BitrixMigrations\Commands\DownCommand;
+use Arrilot\BitrixMigrations\Commands\MakeCommand;
+use Arrilot\BitrixMigrations\Commands\SetupCommand;
+use Arrilot\BitrixMigrations\Commands\UpCommand;
+use Symfony\Component\Console\Application;
+
+require 'vendor/autoload.php';
+
+$config = [
+    'table' => 'migrations',
+    'dir' => 'migrations'
+];
+
+$app = new Application('Bitrix migrations');
+
+$app->add(new SetupCommand($config['table']));
+$app->add(new MakeCommand($config['dir']));
+$app->add(new UpCommand($config['dir'], $config['table']));
+$app->add(new DownCommand($config['dir'], $config['table']));
+
+$app->run();
