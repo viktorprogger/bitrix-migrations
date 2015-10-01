@@ -2,27 +2,45 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
+use Arrilot\BitrixMigrations\Repositories\DatabaseRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SetupCommand extends Command
+class RollbackCommand extends Command
 {
+    /**
+     * Interface that gives us access to the database.
+     *
+     * @var DatabaseRepositoryInterface
+     */
+    protected $database;
+
+    /**
+     * Directory where migration files are stored.
+     *
+     * @var string
+     */
+    protected $dir;
+
     /**
      * Table in DB to store migrations that have been already run.
      *
      * @var string
      */
-    protected $migrationTable;
+    protected $table;
 
     /**
      * Constructor.
      *
-     * @param string $migrationTable
+     * @param DatabaseRepositoryInterface $database
+     * @param array $config
      */
-    public function __construct($migrationTable)
+    public function __construct(DatabaseRepositoryInterface $database, $config)
     {
-        $this->migrationTable = $migrationTable;
+        $this->database = $database;
+        $this->dir = $config['dir'];
+        $this->table = $config['table'];
 
         parent::__construct();
     }
@@ -32,7 +50,7 @@ class SetupCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('setup')->setDescription('Setups the migration table');
+        $this->setName('rollback')->setDescription('Rollback the last migration');
     }
 
     /**
@@ -45,6 +63,6 @@ class SetupCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln($this->migrationTable);
+
     }
 }

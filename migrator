@@ -1,24 +1,27 @@
 #!/usr/bin/env php
 <?php
 
-use Arrilot\BitrixMigrations\Commands\DownCommand;
 use Arrilot\BitrixMigrations\Commands\MakeCommand;
-use Arrilot\BitrixMigrations\Commands\SetupCommand;
-use Arrilot\BitrixMigrations\Commands\UpCommand;
+use Arrilot\BitrixMigrations\Commands\InstallCommand;
+use Arrilot\BitrixMigrations\Commands\MigrateCommand;
+use Arrilot\BitrixMigrations\Commands\RollbackCommand;
+use Arrilot\BitrixMigrations\Repositories\BitrixDatabaseRepository;
 use Symfony\Component\Console\Application;
 
-require 'vendor/autoload.php';
+$_SERVER["DOCUMENT_ROOT"] = __DIR__;
+include $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php";
 
 $config = [
     'table' => 'migrations',
     'dir' => 'migrations'
 ];
+$databaseRepository = new BitrixDatabaseRepository;
 
 $app = new Application('Bitrix migrations');
 
-$app->add(new SetupCommand($config['table']));
-$app->add(new MakeCommand($config['dir']));
-$app->add(new UpCommand($config['dir'], $config['table']));
-$app->add(new DownCommand($config['dir'], $config['table']));
+$app->add(new InstallCommand($databaseRepository, $config));
+$app->add(new MakeCommand($config));
+$app->add(new MigrateCommand($databaseRepository, $config));
+$app->add(new RollbackCommand($databaseRepository, $config));
 
 $app->run();

@@ -13,16 +13,16 @@ class MakeCommand extends Command
      *
      * @var string
      */
-    protected $migrationDir;
+    protected $dir;
 
     /**
      * Constructor.
      *
-     * @param string $migrationDir
+     * @param array $config
      */
-    public function __construct($migrationDir)
+    public function __construct($config)
     {
-        $this->migrationDir = $migrationDir;
+        $this->dir = $_SERVER['DOCUMENT_ROOT'].'/'.$config['dir'];
 
         parent::__construct();
     }
@@ -45,6 +45,16 @@ class MakeCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln($this->migrationDir);
+        $this->ensureDirExists();
+    }
+
+    /**
+     * Create a migration directory if it does not exist.
+     */
+    protected function ensureDirExists()
+    {
+        if (!file_exists($this->dir)) {
+            mkdir($this->dir, 0755, true);
+        }
     }
 }

@@ -2,36 +2,37 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
+use Arrilot\BitrixMigrations\Repositories\DatabaseRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpCommand extends Command
+class InstallCommand extends Command
 {
     /**
-     * Directory where migration files are stored.
+     * Interface that gives us access to the database.
      *
-     * @var string
+     * @var DatabaseRepositoryInterface
      */
-    protected $migrationDir;
+    protected $database;
 
     /**
      * Table in DB to store migrations that have been already run.
      *
      * @var string
      */
-    protected $migrationTable;
+    protected $table;
 
     /**
      * Constructor.
      *
-     * @param string $migrationDir
+     * @param DatabaseRepositoryInterface $database
      * @param string $migrationTable
      */
-    public function __construct($migrationDir, $migrationTable)
+    public function __construct(DatabaseRepositoryInterface $database, $migrationTable)
     {
-        $this->migrationDir = $migrationDir;
-        $this->migrationTable = $migrationTable;
+        $this->database = $database;
+        $this->table = $migrationTable;
 
         parent::__construct();
     }
@@ -41,7 +42,7 @@ class UpCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('up')->setDescription('Run migrations up');
+        $this->setName('install')->setDescription('Create the migration database table');
     }
 
     /**
@@ -54,6 +55,14 @@ class UpCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if ($this->database->checkTableExistence($this->table)) {
+            $output->writeln("<error>Table \"{$this->table}\" already exists</error>");
 
+            return false;
+        }
+
+        $this->database->createMigrationTable($this->table);
+
+        return $output->writeln("<info>Migration table has been successfully created!</info>");
     }
 }

@@ -2,35 +2,45 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
+use Arrilot\BitrixMigrations\Repositories\DatabaseRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DownCommand extends Command
+class MigrateCommand extends Command
 {
+    /**
+     * Interface that gives us access to the database.
+     *
+     * @var DatabaseRepositoryInterface
+     */
+    protected $database;
+
     /**
      * Directory where migration files are stored.
      *
      * @var string
      */
-    protected $migrationDir;
+    protected $dir;
 
     /**
      * Table in DB to store migrations that have been already run.
      *
      * @var string
      */
-    protected $migrationTable;
+    protected $table;
+
     /**
      * Constructor.
      *
-     * @param string $migrationDir
-     * @param string $migrationTable
+     * @param DatabaseRepositoryInterface $database
+     * @param array $config
      */
-    public function __construct($migrationDir, $migrationTable)
+    public function __construct(DatabaseRepositoryInterface $database, $config)
     {
-        $this->migrationDir = $migrationDir;
-        $this->migrationTable = $migrationTable;
+        $this->database = $database;
+        $this->dir = $config['dir'];
+        $this->table = $config['table'];
 
         parent::__construct();
     }
@@ -40,7 +50,7 @@ class DownCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('down')->setDescription('Run migrations down');
+        $this->setName('migrate')->setDescription('Run all outstanding migrations');
     }
 
     /**
