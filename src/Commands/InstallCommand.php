@@ -55,13 +55,13 @@ class InstallCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->database->checkTableExistence($this->table)) {
+        if ($this->database->checkMigrationTableExistence()) {
             $output->writeln("<error>Table \"{$this->table}\" already exists</error>");
 
             return false;
         }
 
-        $this->database->createMigrationTable($this->table);
+        $this->database->createMigrationTable();
 
         return $output->writeln("<info>Migration table has been successfully created!</info>");
     }

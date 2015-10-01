@@ -7,16 +7,21 @@ interface DatabaseRepositoryInterface
     /**
      * Check if a given table already exists.
      *
-     * @param $table
      * @return bool
      */
-    public function checkTableExistence($table);
+    public function checkMigrationTableExistence();
 
     /**
      * Create migration table.
      *
-     * @param $table
      * @return void
      */
-    public function createMigrationTable($table);
+    public function createMigrationTable();
+
+    /**
+     * Get an array of migrations the have been ran previously.
+     *
+     * @return array
+     */
+    public function getRanMigrations();
 }

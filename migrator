@@ -15,7 +15,7 @@ $config = [
     'table' => 'migrations',
     'dir' => 'migrations'
 ];
-$databaseRepository = new BitrixDatabaseRepository;
+$databaseRepository = new BitrixDatabaseRepository($config['table']);
 
 $app = new Application('Bitrix migrations');
 
