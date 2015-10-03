@@ -3,12 +3,10 @@
 namespace Arrilot\BitrixMigrations\Commands;
 
 use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
-use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
 use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
 use Arrilot\BitrixMigrations\Repositories\FileRepository;
-use Illuminate\Support\Str;
 
-class MigrateCommand extends AbstractCommand
+class MigrateCommand extends AbstractMigrationCommand
 {
     /**
      * Interface that gives us access to the database.
@@ -25,7 +23,7 @@ class MigrateCommand extends AbstractCommand
     protected $dir;
 
     /**
-     * File interactions
+     * Files interactions.
      *
      * @var FileRepositoryInterface
      */
@@ -74,30 +72,6 @@ class MigrateCommand extends AbstractCommand
     }
 
     /**
-     * Resolve a migration instance from a file.
-     *
-     * @param  string  $file
-     * @return MigrationInterface
-     */
-    protected function getMigrationObjectByFileName($file)
-    {
-        $fileExploded = explode('_', $file);
-
-        $datePart = implode('_', array_slice($fileExploded, 0, 4));
-        $namePart = implode('_', array_slice($fileExploded, 4));
-
-        $class = Str::studly($namePart."_".$datePart);
-
-        $object =  new $class;
-
-        if (!$object instanceof MigrationInterface) {
-            $this->abort("Migration class {$class} must implement Arrilot\\BitrixMigrations\\Interfaces\\MigrationInterface");
-        }
-
-        return $object;
-    }
-
-    /**
      * Get array of migrations that should be ran.
      *
      * @return array
@@ -129,6 +103,6 @@ class MigrateCommand extends AbstractCommand
 
         $this->database->logSuccessfulMigration($file);
 
-        $this->info("Migrated: {$file}");
+        $this->message("<info>Migrated:</info> {$file}.php");
     }
 }

@@ -2,11 +2,13 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
+use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
 use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
 use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
+use Arrilot\BitrixMigrations\Repositories\FileRepository;
 use Illuminate\Support\Str;
 
-class RollbackCommand extends AbstractCommand
+class RollbackCommand extends AbstractMigrationCommand
 {
     /**
      * Interface that gives us access to the database.
@@ -23,15 +25,24 @@ class RollbackCommand extends AbstractCommand
     protected $dir;
 
     /**
+     * Files interactions.
+     *
+     * @var FileRepositoryInterface
+     */
+    protected $files;
+
+    /**
      * Constructor.
      *
-     * @param DatabaseRepositoryInterface $database
      * @param array $config
+     * @param DatabaseRepositoryInterface $database
+     * @param FileRepositoryInterface $files
      */
-    public function __construct($config, DatabaseRepositoryInterface $database)
+    public function __construct($config, DatabaseRepositoryInterface $database, FileRepositoryInterface $files = null)
     {
         $this->database = $database;
         $this->dir = $config['dir'];
+        $this->files = $files ?: new FileRepository();
 
         parent::__construct();
     }
@@ -51,6 +62,34 @@ class RollbackCommand extends AbstractCommand
      */
     protected function fire()
     {
+        $migration = end($this->database->getRanMigrations());
 
+        if ($migration) {
+            $this->rollbackMigration($migration);
+        } else {
+            $this->info('Nothing to rollback');
+        }
+    }
+
+    /**
+     * Rollback a given migration.
+     *
+     * @param string $file
+     * @return mixed
+     */
+    protected function rollbackMigration($file)
+    {
+        $this->files->requireFile($this->dir . '/' . $file . '.php');
+
+        $migration = $this->getMigrationObjectByFileName($file);
+
+        if ($migration->down() === false) {
+            $this->message("<error>Can't rollback migration:</error> {$file}.php");
+            $this->abort();
+        }
+
+        $this->database->removeSuccessfulMigrationFromLog($file);
+
+        $this->message("<info>Rolled back:</info> {$file}.php");
     }
 }

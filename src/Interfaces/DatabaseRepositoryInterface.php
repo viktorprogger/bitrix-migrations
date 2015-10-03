@@ -19,17 +19,26 @@ interface DatabaseRepositoryInterface
     public function createMigrationTable();
 
     /**
-     * Get an array of migrations the have been ran previously.
+     * Get an array of migrations that have been ran previously.
+     * Must be ordered by order asc.
      *
      * @return array
      */
     public function getRanMigrations();
 
     /**
-     * Save migration name to the database to prevent it from running again.
+     * Save a migration name to the database to prevent it from running again.
      *
-     * @param string $fileName
+     * @param string $name
      * @return void
      */
-    public function logSuccessfulMigration($fileName);
+    public function logSuccessfulMigration($name);
+
+    /**
+     * Remove a migration name from the database so it can be run again.
+     *
+     * @param string $name
+     * @return void
+     */
+    public function removeSuccessfulMigrationFromLog($name);
 }

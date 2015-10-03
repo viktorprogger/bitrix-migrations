@@ -54,6 +54,7 @@ class BitrixDatabaseRepository implements DatabaseRepositoryInterface
 
     /**
      * Get an array of migrations the have been ran previously.
+     * Must be ordered by order asc.
      *
      * @return array
      */
@@ -72,13 +73,24 @@ class BitrixDatabaseRepository implements DatabaseRepositoryInterface
     /**
      * Save migration name to the database to prevent it from running again.
      *
-     * @param string $fileName
+     * @param string $name
      * @return void
      */
-    public function logSuccessfulMigration($fileName)
+    public function logSuccessfulMigration($name)
     {
         $this->db->insert($this->table, [
-            'MIGRATION' => "'".$this->db->forSql($fileName)."'",
+            'MIGRATION' => "'".$this->db->forSql($name)."'",
         ]);
+    }
+
+    /**
+     * Remove a migration name from the database so it can be run again.
+     *
+     * @param string $name
+     * @return void
+     */
+    public function removeSuccessfulMigrationFromLog($name)
+    {
+        $this->db->query("DELETE FROM {$this->table} WHERE MIGRATION = '".$this->db->forSql($name)."'");
     }
 }
