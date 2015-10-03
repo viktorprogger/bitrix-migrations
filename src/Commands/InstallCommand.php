@@ -2,12 +2,9 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
-use Arrilot\BitrixMigrations\Repositories\DatabaseRepositoryInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
 
-class InstallCommand extends Command
+class InstallCommand extends AbstractCommand
 {
     /**
      * Interface that gives us access to the database.
@@ -26,13 +23,13 @@ class InstallCommand extends Command
     /**
      * Constructor.
      *
+     * @param array $config
      * @param DatabaseRepositoryInterface $database
-     * @param string $migrationTable
      */
-    public function __construct(DatabaseRepositoryInterface $database, $migrationTable)
+    public function __construct($config, DatabaseRepositoryInterface $database)
     {
+        $this->table = $config['table'];
         $this->database = $database;
-        $this->table = $migrationTable;
 
         parent::__construct();
     }
@@ -46,23 +43,18 @@ class InstallCommand extends Command
     }
 
     /**
-     * Executes the current command.
+     * Execute the console command.
      *
-     * @param InputInterface  $input  An InputInterface instance
-     * @param OutputInterface $output An OutputInterface instance
-     *
-     * @return null|int null or 0 if everything went fine, or an error code.
+     * @return null|int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function fire()
     {
         if ($this->database->checkMigrationTableExistence()) {
-            $output->writeln("<error>Table \"{$this->table}\" already exists</error>");
-
-            return false;
+            $this->abort("Table \"{$this->table}\" already exists");
         }
 
         $this->database->createMigrationTable();
 
-        return $output->writeln("<info>Migration table has been successfully created!</info>");
+        $this->info("Migration table has been successfully created!");
     }
 }

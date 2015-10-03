@@ -13,15 +13,16 @@ include $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.ph
 
 $config = [
     'table' => 'migrations',
-    'dir' => 'migrations'
+    'dir' => $_SERVER['DOCUMENT_ROOT'].'/migrations'
 ];
-$databaseRepository = new BitrixDatabaseRepository($config['table']);
+
+$database = new BitrixDatabaseRepository($config['table']);
 
 $app = new Application('Bitrix migrations');
 
-$app->add(new InstallCommand($databaseRepository, $config));
+$app->add(new InstallCommand($config, $database));
 $app->add(new MakeCommand($config));
-$app->add(new MigrateCommand($databaseRepository, $config));
-$app->add(new RollbackCommand($databaseRepository, $config));
+$app->add(new MigrateCommand($config, $database));
+$app->add(new RollbackCommand($config, $database));
 
 $app->run();

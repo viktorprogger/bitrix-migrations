@@ -2,6 +2,8 @@
 
 namespace Arrilot\BitrixMigrations\Repositories;
 
+use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
+
 class BitrixDatabaseRepository implements DatabaseRepositoryInterface
 {
     /**
@@ -57,8 +59,26 @@ class BitrixDatabaseRepository implements DatabaseRepositoryInterface
      */
     public function getRanMigrations()
     {
-        $migrations = $this->db->query("SELECT MIGRATION FROM {$this->table} ORDER BY ID ASC")->fetch();
+        $migrations = [];
 
-        return $migrations ?: [];
+        $dbRes = $this->db->query("SELECT MIGRATION FROM {$this->table} ORDER BY ID ASC");
+        while ($result = $dbRes->fetch()) {
+            $migrations[] = $result['MIGRATION'];
+        }
+
+        return $migrations;
+    }
+
+    /**
+     * Save migration name to the database to prevent it from running again.
+     *
+     * @param string $fileName
+     * @return void
+     */
+    public function logSuccessfulMigration($fileName)
+    {
+        $this->db->insert($this->table, [
+            'MIGRATION' => "'".$this->db->forSql($fileName)."'",
+        ]);
     }
 }

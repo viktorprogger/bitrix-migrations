@@ -2,13 +2,13 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
-use Arrilot\BitrixMigrations\Repositories\DatabaseRepositoryInterface;
+use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
+use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
+use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
+use Arrilot\BitrixMigrations\Repositories\FileRepository;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
-class MigrateCommand extends Command
+class MigrateCommand extends AbstractCommand
 {
     /**
      * Interface that gives us access to the database.
@@ -25,15 +25,24 @@ class MigrateCommand extends Command
     protected $dir;
 
     /**
+     * File interactions
+     *
+     * @var FileRepositoryInterface
+     */
+    protected $files;
+
+    /**
      * Constructor.
      *
-     * @param DatabaseRepositoryInterface $database
      * @param array $config
+     * @param DatabaseRepositoryInterface $database
+     * @param FileRepositoryInterface $files
      */
-    public function __construct(DatabaseRepositoryInterface $database, $config)
+    public function __construct($config, DatabaseRepositoryInterface $database, FileRepositoryInterface $files = null)
     {
         $this->database = $database;
-        $this->dir = $_SERVER['DOCUMENT_ROOT'].'/'.$config['dir'];
+        $this->dir = $config['dir'];
+        $this->files = $files ?: new FileRepository();
 
         parent::__construct();
     }
@@ -47,65 +56,45 @@ class MigrateCommand extends Command
     }
 
     /**
-     * Executes the current command.
+     * Execute the console command.
      *
-     * @param InputInterface  $input  An InputInterface instance
-     * @param OutputInterface $output An OutputInterface instance
-     *
-     * @return null|int null or 0 if everything went fine, or an error code.
+     * @return null|int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function fire()
     {
         $migrations = $this->getMigrationsToRun();
 
-        if (!$migrations) {
-            return $output->writeln("<info>Nothing to migrate</info>");
+        if (!empty($migrations)) {
+            foreach ($migrations as $migration) {
+                $this->runMigration($migration);
+            }
+        } else {
+            $this->info('Nothing to migrate');
         }
-
-        foreach ($migrations as $migration) {
-            $this->runMigration($migration);
-        }
-
-        echo "<pre>"; var_dump($migrations); echo "</pre>";
     }
 
     /**
      * Resolve a migration instance from a file.
      *
      * @param  string  $file
-     * @return object
+     * @return MigrationInterface
      */
-    public function determineMigrationClass($file)
+    protected function getMigrationObjectByFileName($file)
     {
-        $file = implode('_', array_slice(explode('_', $file), 4));
+        $fileExploded = explode('_', $file);
 
-        $class = Str::studly($file);
+        $datePart = implode('_', array_slice($fileExploded, 0, 4));
+        $namePart = implode('_', array_slice($fileExploded, 4));
 
-        return new $class;
-    }
+        $class = Str::studly($namePart."_".$datePart);
 
-    /**
-     * Get all of the migration files in a given path.
-     *
-     * @param  string  $path
-     * @return array
-     */
-    public function getMigrationFiles($path)
-    {
-        $files = glob($path.'/*_*.php');
+        $object =  new $class;
 
-        if ($files === false) {
-            return [];
+        if (!$object instanceof MigrationInterface) {
+            $this->abort("Migration class {$class} must implement Arrilot\\BitrixMigrations\\Interfaces\\MigrationInterface");
         }
 
-        $files = array_map(function ($file) {
-            return str_replace('.php', '', basename($file));
-
-        }, $files);
-
-        sort($files);
-
-        return $files;
+        return $object;
     }
 
     /**
@@ -115,7 +104,7 @@ class MigrateCommand extends Command
      */
     protected function getMigrationsToRun()
     {
-        $allMigrations = $this->getMigrationFiles($this->dir);
+        $allMigrations = $this->files->getMigrationFiles($this->dir);
 
         $ranMigrations = $this->database->getRanMigrations();
 
@@ -125,12 +114,21 @@ class MigrateCommand extends Command
     /**
      * Run a given migration.
      *
-     * @param $migration
+     * @param string $file
+     * @return mixed
      */
-    protected function runMigration($migration)
+    protected function runMigration($file)
     {
-        require_once $this->dir . '/' . $migration . '.php';
+        $this->files->requireFile($this->dir . '/' . $file . '.php');
 
-        $class = $this->determineMigrationClass($migration);
+        $migration = $this->getMigrationObjectByFileName($file);
+
+        if ($migration->up() === false) {
+            $this->abort("Migration up from {$file}.php returned false");
+        }
+
+        $this->database->logSuccessfulMigration($file);
+
+        $this->info("Migrated: {$file}");
     }
 }

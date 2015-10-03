@@ -2,11 +2,7 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-
-class MakeCommand extends Command
+class MakeCommand extends AbstractCommand
 {
     /**
      * Directory where migration files are stored.
@@ -22,7 +18,7 @@ class MakeCommand extends Command
      */
     public function __construct($config)
     {
-        $this->dir = $_SERVER['DOCUMENT_ROOT'].'/'.$config['dir'];
+        $this->dir = $config['dir'];
 
         parent::__construct();
     }
@@ -36,14 +32,11 @@ class MakeCommand extends Command
     }
 
     /**
-     * Executes the current command.
+     * Execute the console command.
      *
-     * @param InputInterface  $input  An InputInterface instance
-     * @param OutputInterface $output An OutputInterface instance
-     *
-     * @return null|int null or 0 if everything went fine, or an error code.
+     * @return null|int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function fire()
     {
         $this->ensureDirExists();
     }

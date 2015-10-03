@@ -1,6 +1,6 @@
 <?php
 
-namespace Arrilot\BitrixMigrations\Repositories;
+namespace Arrilot\BitrixMigrations\Interfaces;
 
 interface DatabaseRepositoryInterface
 {
@@ -24,4 +24,12 @@ interface DatabaseRepositoryInterface
      * @return array
      */
     public function getRanMigrations();
+
+    /**
+     * Save migration name to the database to prevent it from running again.
+     *
+     * @param string $fileName
+     * @return void
+     */
+    public function logSuccessfulMigration($fileName);
 }
