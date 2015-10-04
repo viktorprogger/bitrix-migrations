@@ -4,7 +4,7 @@ namespace Arrilot\BitrixMigrations\Commands;
 
 use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
 
-class InstallCommand extends AbstractMigrationCommand
+class InstallCommand extends AbstractCommand
 {
     /**
      * Interface that gives us access to the database.

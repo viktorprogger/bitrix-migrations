@@ -2,8 +2,6 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
-use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
-use Arrilot\BitrixMigrations\Repositories\FileRepository;
 use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,39 +9,11 @@ use Symfony\Component\Console\Input\InputOption;
 class MakeCommand extends AbstractMigrationCommand
 {
     /**
-     * Directory where migration files are stored.
-     *
-     * @var string
-     */
-    protected $dir;
-
-    /**
-     * Files interactions.
-     *
-     * @var FileRepositoryInterface
-     */
-    protected $files;
-
-    /**
      * Array of available migration file templates.
      *
      * @var array
      */
     protected $templates = [];
-
-    /**
-     * Constructor.
-     *
-     * @param array                   $config
-     * @param FileRepositoryInterface $files
-     */
-    public function __construct($config, FileRepositoryInterface $files = null)
-    {
-        $this->dir = $config['dir'];
-        $this->files = $files ?: new FileRepository();
-
-        parent::__construct();
-    }
 
     /**
      * Configures the current command.

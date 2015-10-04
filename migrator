@@ -20,7 +20,7 @@ $config = [
 
 $database = new BitrixDatabaseRepository($config['table']);
 
-$makeCommand = new MakeCommand($config);
+$makeCommand = new MakeCommand($config, $database);
 $makeCommand->registerTemplate([
     'name' => 'default',
     'path' => $config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/migration.default.template',

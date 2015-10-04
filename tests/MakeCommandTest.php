@@ -8,8 +8,10 @@ class MakeCommandTest extends TestCase
 {
     protected function mockCommand($files)
     {
+        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
+
         return m::mock('Arrilot\BitrixMigrations\Commands\MakeCommand[abort, info, message, getMigrationObjectByFileName]',
-                [$this->getConfig(), $files]
+                [$this->getConfig(), $database, $files]
             )
             ->shouldAllowMockingProtectedMethods();
     }

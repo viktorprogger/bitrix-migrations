@@ -5,7 +5,7 @@ namespace Arrilot\BitrixMigrations\Commands;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
 
-class TemplatesCommand extends AbstractMigrationCommand
+class TemplatesCommand extends AbstractCommand
 {
     /**
      * Table in DB to store migrations that have been already run.

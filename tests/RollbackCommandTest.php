@@ -39,7 +39,6 @@ class RollbackCommandTest extends TestCase
 
         // running the rollback
         $command = $this->mockCommand($database, $files);
-        $files->shouldReceive('requireFile')->once();
         $command->shouldReceive('getMigrationObjectByFileName')->with('2014_11_26_162220_foo')->never();
 
         $migration = m::mock('Arrilot\BitrixMigrations\Interfaces\MigrationInterface');

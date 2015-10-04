@@ -3,49 +3,9 @@
 namespace Arrilot\BitrixMigrations\Commands;
 
 use Arrilot\BitrixMigrations\Exceptions\MigrationException;
-use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
-use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
-use Arrilot\BitrixMigrations\Repositories\FileRepository;
 
 class RollbackCommand extends AbstractMigrationCommand
 {
-    /**
-     * Interface that gives us access to the database.
-     *
-     * @var DatabaseRepositoryInterface
-     */
-    protected $database;
-
-    /**
-     * Directory where migration files are stored.
-     *
-     * @var string
-     */
-    protected $dir;
-
-    /**
-     * Files interactions.
-     *
-     * @var FileRepositoryInterface
-     */
-    protected $files;
-
-    /**
-     * Constructor.
-     *
-     * @param array                       $config
-     * @param DatabaseRepositoryInterface $database
-     * @param FileRepositoryInterface     $files
-     */
-    public function __construct($config, DatabaseRepositoryInterface $database, FileRepositoryInterface $files = null)
-    {
-        $this->database = $database;
-        $this->dir = $config['dir'];
-        $this->files = $files ?: new FileRepository();
-
-        parent::__construct();
-    }
-
     /**
      * Configures the current command.
      */
@@ -61,10 +21,10 @@ class RollbackCommand extends AbstractMigrationCommand
      */
     protected function fire()
     {
-        $migration = end($this->database->getRanMigrations());
+        $ran = $this->database->getRanMigrations();
 
-        if ($migration) {
-            $this->rollbackMigration($migration);
+        if ($ran) {
+            $this->rollbackMigration($ran[count($ran)-1]);
         } else {
             $this->info('Nothing to rollback');
         }
@@ -79,8 +39,6 @@ class RollbackCommand extends AbstractMigrationCommand
      */
     protected function rollbackMigration($file)
     {
-        $this->files->requireFile($this->dir.'/'.$file.'.php');
-
         $migration = $this->getMigrationObjectByFileName($file);
 
         try {
