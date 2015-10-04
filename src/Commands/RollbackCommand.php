@@ -3,11 +3,9 @@
 namespace Arrilot\BitrixMigrations\Commands;
 
 use Arrilot\BitrixMigrations\Exceptions\MigrationException;
-use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
-use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
 use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
+use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
 use Arrilot\BitrixMigrations\Repositories\FileRepository;
-use Illuminate\Support\Str;
 
 class RollbackCommand extends AbstractMigrationCommand
 {
@@ -35,9 +33,9 @@ class RollbackCommand extends AbstractMigrationCommand
     /**
      * Constructor.
      *
-     * @param array $config
+     * @param array                       $config
      * @param DatabaseRepositoryInterface $database
-     * @param FileRepositoryInterface $files
+     * @param FileRepositoryInterface     $files
      */
     public function __construct($config, DatabaseRepositoryInterface $database, FileRepositoryInterface $files = null)
     {
@@ -76,11 +74,12 @@ class RollbackCommand extends AbstractMigrationCommand
      * Rollback a given migration.
      *
      * @param string $file
+     *
      * @return mixed
      */
     protected function rollbackMigration($file)
     {
-        $this->files->requireFile($this->dir . '/' . $file . '.php');
+        $this->files->requireFile($this->dir.'/'.$file.'.php');
 
         $migration = $this->getMigrationObjectByFileName($file);
 
@@ -92,7 +91,6 @@ class RollbackCommand extends AbstractMigrationCommand
         } catch (MigrationException $e) {
             $this->abort($e->getMessage());
         }
-
 
         $this->database->removeSuccessfulMigrationFromLog($file);
 

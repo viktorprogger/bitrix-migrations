@@ -64,8 +64,8 @@ class TemplatesCommand extends AbstractMigrationCommand
 
                 $names = array_merge([$template['name']], $template['aliases']);
                 $row[] = implode("\n/ ", $names);
-                $row[] = wordwrap($template['path'], 65,"\n", true);
-                $row[] = wordwrap($template['description'], 25,"\n", true);
+                $row[] = wordwrap($template['path'], 65, "\n", true);
+                $row[] = wordwrap($template['description'], 25, "\n", true);
 
                 return $row;
             });
@@ -77,6 +77,7 @@ class TemplatesCommand extends AbstractMigrationCommand
      * Separate rows with a separator.
      *
      * @param $templates
+     *
      * @return array
      */
     protected function separateRows($templates)

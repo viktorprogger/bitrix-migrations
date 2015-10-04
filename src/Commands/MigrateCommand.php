@@ -3,8 +3,8 @@
 namespace Arrilot\BitrixMigrations\Commands;
 
 use Arrilot\BitrixMigrations\Exceptions\MigrationException;
-use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
 use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
+use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
 use Arrilot\BitrixMigrations\Repositories\FileRepository;
 
 class MigrateCommand extends AbstractMigrationCommand
@@ -33,9 +33,9 @@ class MigrateCommand extends AbstractMigrationCommand
     /**
      * Constructor.
      *
-     * @param array $config
+     * @param array                       $config
      * @param DatabaseRepositoryInterface $database
-     * @param FileRepositoryInterface $files
+     * @param FileRepositoryInterface     $files
      */
     public function __construct($config, DatabaseRepositoryInterface $database, FileRepositoryInterface $files = null)
     {
@@ -90,11 +90,12 @@ class MigrateCommand extends AbstractMigrationCommand
      * Run a given migration.
      *
      * @param string $file
+     *
      * @return mixed
      */
     protected function runMigration($file)
     {
-        $this->files->requireFile($this->dir . '/' . $file . '.php');
+        $this->files->requireFile($this->dir.'/'.$file.'.php');
 
         $migration = $this->getMigrationObjectByFileName($file);
 

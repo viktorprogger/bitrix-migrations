@@ -30,6 +30,7 @@ interface DatabaseRepositoryInterface
      * Save a migration name to the database to prevent it from running again.
      *
      * @param string $name
+     *
      * @return void
      */
     public function logSuccessfulMigration($name);
@@ -38,6 +39,7 @@ interface DatabaseRepositoryInterface
      * Remove a migration name from the database so it can be run again.
      *
      * @param string $name
+     *
      * @return void
      */
     public function removeSuccessfulMigrationFromLog($name);

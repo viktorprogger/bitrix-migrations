@@ -2,7 +2,6 @@
 
 namespace Arrilot\Tests\BitrixMigrations;
 
-use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
 use Mockery as m;
 
 class MakeCommandTest extends TestCase
@@ -25,8 +24,8 @@ class MakeCommandTest extends TestCase
         $command = $this->mockCommand($files);
         $command->shouldReceive('message')->once();
         $command->registerTemplate([
-            'name' => 'default',
-            'path' => '/vendor/arrilot/bitrix-migrations/templates/migration.default.template',
+            'name'        => 'default',
+            'path'        => '/vendor/arrilot/bitrix-migrations/templates/migration.default.template',
             'description' => 'Default migration template',
         ]);
 

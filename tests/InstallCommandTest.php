@@ -14,7 +14,7 @@ class InstallCommandTest extends TestCase
 
     public function testItCreatesMigrationTable()
     {
-        $database= m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
+        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
         $database->shouldReceive('checkMigrationTableExistence')->once()->andReturn(false);
         $database->shouldReceive('createMigrationTable')->once();
 
@@ -25,7 +25,7 @@ class InstallCommandTest extends TestCase
 
     public function testItDoesNotCreateATableIfItExists()
     {
-        $database= m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
+        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
         $database->shouldReceive('checkMigrationTableExistence')->once()->andReturn(true);
         $database->shouldReceive('createMigrationTable')->never();
 

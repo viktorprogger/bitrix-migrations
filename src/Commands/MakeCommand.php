@@ -4,7 +4,6 @@ namespace Arrilot\BitrixMigrations\Commands;
 
 use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
 use Arrilot\BitrixMigrations\Repositories\FileRepository;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -35,7 +34,7 @@ class MakeCommand extends AbstractMigrationCommand
     /**
      * Constructor.
      *
-     * @param array $config
+     * @param array                   $config
      * @param FileRepositoryInterface $files
      */
     public function __construct($config, FileRepositoryInterface $files = null)
@@ -85,13 +84,14 @@ class MakeCommand extends AbstractMigrationCommand
 
         $this->createMigrationFile($fileName, $template);
 
-        $this->message("<info>Migration created:</info> {$fileName}.php" );
+        $this->message("<info>Migration created:</info> {$fileName}.php");
     }
 
     /**
      * Path to the file where a template is located.
      *
      * @param string $templateName
+     *
      * @return string
      */
     protected function templatePath($templateName)
@@ -113,6 +113,7 @@ class MakeCommand extends AbstractMigrationCommand
      * Dynamically register migration template.
      *
      * @param array $template
+     *
      * @return void
      */
     public function registerTemplate($template)
@@ -128,6 +129,7 @@ class MakeCommand extends AbstractMigrationCommand
      * Check template fields and normalize them.
      *
      * @param $template
+     *
      * @return array
      */
     protected function normalizeTemplate($template)
@@ -152,6 +154,7 @@ class MakeCommand extends AbstractMigrationCommand
      *
      * @param array $template
      * @param array $aliases
+     *
      * @return void
      */
     protected function registerTemplateAliases($template, array $aliases = [])
@@ -200,6 +203,7 @@ class MakeCommand extends AbstractMigrationCommand
      *
      * @param string $stub
      * @param string $className
+     *
      * @return string
      */
     protected function replacePlaceholdersInStub($stub, $className)
@@ -211,6 +215,7 @@ class MakeCommand extends AbstractMigrationCommand
      * Construct migration file name from user input and current time.
      *
      * @param $input
+     *
      * @return string
      */
     protected function constructFileName($input)
@@ -223,10 +228,11 @@ class MakeCommand extends AbstractMigrationCommand
      *
      * @param string $fileName
      * @param string $content
+     *
      * @return void
      */
     protected function createMigrationFile($fileName, $content)
     {
-        $this->files->putContent($this->dir . '/' . $fileName . '.php', $content);
+        $this->files->putContent($this->dir.'/'.$fileName.'.php', $content);
     }
 }

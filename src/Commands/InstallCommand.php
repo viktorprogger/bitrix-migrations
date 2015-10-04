@@ -23,7 +23,7 @@ class InstallCommand extends AbstractMigrationCommand
     /**
      * Constructor.
      *
-     * @param array $config
+     * @param array                       $config
      * @param DatabaseRepositoryInterface $database
      */
     public function __construct($config, DatabaseRepositoryInterface $database)
@@ -55,6 +55,6 @@ class InstallCommand extends AbstractMigrationCommand
 
         $this->database->createMigrationTable();
 
-        $this->info("Migration table has been successfully created!");
+        $this->info('Migration table has been successfully created!');
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Arrilot\Tests\BitrixMigrations;
 
-use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
 use Mockery as m;
 
 class RollbackCommandTest extends TestCase
@@ -15,7 +14,7 @@ class RollbackCommandTest extends TestCase
 
     public function testItRollbacksNothingIfThereIsNoMigrations()
     {
-        $database= m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
+        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
         $database->shouldReceive('getRanMigrations')->once()->andReturn([]);
 
         $files = m::mock('Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface');
@@ -30,7 +29,7 @@ class RollbackCommandTest extends TestCase
     public function testItRollbacksTheLastMigration()
     {
         // mocking friends
-        $database= m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
+        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
         $database->shouldReceive('getRanMigrations')->once()->andReturn([
             '2014_11_26_162220_foo',
             '2015_11_26_162220_bar',

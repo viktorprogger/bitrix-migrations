@@ -22,6 +22,7 @@ class BitrixDatabaseRepository implements DatabaseRepositoryInterface
 
     /**
      * BitrixDatabaseRepository constructor.
+     *
      * @param $table
      */
     public function __construct($table)
@@ -74,6 +75,7 @@ class BitrixDatabaseRepository implements DatabaseRepositoryInterface
      * Save migration name to the database to prevent it from running again.
      *
      * @param string $name
+     *
      * @return void
      */
     public function logSuccessfulMigration($name)
@@ -87,6 +89,7 @@ class BitrixDatabaseRepository implements DatabaseRepositoryInterface
      * Remove a migration name from the database so it can be run again.
      *
      * @param string $name
+     *
      * @return void
      */
     public function removeSuccessfulMigrationFromLog($name)

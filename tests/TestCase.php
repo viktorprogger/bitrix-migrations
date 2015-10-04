@@ -16,7 +16,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 
     protected function runCommand($command, $input = [])
     {
-        return $command->run(new ArrayInput($input), new NullOutput);
+        return $command->run(new ArrayInput($input), new NullOutput());
     }
 
     /**
@@ -26,7 +26,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
     {
         return [
             'table' => 'migrations',
-            'dir' => 'migrations'
+            'dir'   => 'migrations',
         ];
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Arrilot\Tests\BitrixMigrations;
 
-use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
 use Mockery as m;
 
 class MigrateCommandTest extends TestCase
@@ -15,7 +14,7 @@ class MigrateCommandTest extends TestCase
 
     public function testItMigratesNothingIfThereIsNoOutstandingMigrations()
     {
-        $database= m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
+        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
         $database->shouldReceive('getRanMigrations')->once()->andReturn([
             '2014_11_26_162220_foo',
             '2015_11_26_162220_bar',
@@ -37,7 +36,7 @@ class MigrateCommandTest extends TestCase
     public function testItMigratesOutstandingMigrations()
     {
         // mocking friends
-        $database= m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
+        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
         $database->shouldReceive('getRanMigrations')->once()->andReturn([
             '2014_11_26_162220_foo',
         ]);
