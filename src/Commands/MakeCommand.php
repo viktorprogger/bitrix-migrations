@@ -5,6 +5,7 @@ namespace Arrilot\BitrixMigrations\Commands;
 use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
 use Arrilot\BitrixMigrations\Repositories\FileRepository;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -23,6 +24,13 @@ class MakeCommand extends AbstractMigrationCommand
      * @var FileRepositoryInterface
      */
     protected $files;
+
+    /**
+     * Array of available migration file templates.
+     *
+     * @var array
+     */
+    protected $templates = [];
 
     /**
      * Constructor.
@@ -70,38 +78,111 @@ class MakeCommand extends AbstractMigrationCommand
         $fileName = $this->constructFileName($this->input->getArgument('name'));
         $className = $this->getMigrationClassNameByFileName($fileName);
 
-        $stubData = $this->files->getContent($this->stubPath());
-        $stubData = $this->replaceDummiesInStub($stubData, $className);
+        $templateName = $this->getCurrentTemplateName();
 
-        $this->createMigrationFile($fileName, $stubData);
+        $template = $this->files->getContent($this->templatePath($templateName));
+        $template = $this->replacePlaceholdersInStub($template, $className);
+
+        $this->createMigrationFile($fileName, $template);
 
         $this->message("<info>Migration created:</info> {$fileName}.php" );
     }
 
     /**
-     * Path to the file where a stub is located.
+     * Path to the file where a template is located.
      *
+     * @param string $templateName
      * @return string
      */
-    protected function stubPath()
+    protected function templatePath($templateName)
     {
-        return __DIR__.'/stubs/migration.' . $this->findOutStubTemplate() . '.stub';
+        return $this->templates[$templateName]['path'];
     }
 
     /**
-     * Find out stub template depending on user input.
+     * Getter for templates property.
+     *
+     * @return array
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
+    /**
+     * Dynamically register migration template.
+     *
+     * @param array $template
+     * @return void
+     */
+    public function registerTemplate($template)
+    {
+        $template = $this->normalizeTemplate($template);
+
+        $this->templates[$template['name']] = $template;
+
+        $this->registerTemplateAliases($template, $template['aliases']);
+    }
+
+    /**
+     * Check template fields and normalize them.
+     *
+     * @param $template
+     * @return array
+     */
+    protected function normalizeTemplate($template)
+    {
+        if (empty($template['name'])) {
+            throw new InvalidArgumentException('Impossible to register a template without "name"');
+        }
+
+        if (empty($template['path'])) {
+            throw new InvalidArgumentException('Impossible to register a template without "path"');
+        }
+
+        $template['description'] = isset($template['description']) ? $template['description'] : '';
+        $template['aliases'] = isset($template['aliases']) ? $template['aliases'] : [];
+        $template['is_alias'] = false;
+
+        return $template;
+    }
+
+    /**
+     * Register template aliases.
+     *
+     * @param array $template
+     * @param array $aliases
+     * @return void
+     */
+    protected function registerTemplateAliases($template, array $aliases = [])
+    {
+        foreach ($aliases as $alias) {
+            $template['is_alias'] = true;
+            $template['name'] = $alias;
+            $template['aliases'] = [];
+
+            $this->templates[$template['name']] = $template;
+        }
+    }
+
+    /**
+     * Find out template name from user input.
      *
      * @return string
      */
-    protected function findOutStubTemplate()
+    protected function getCurrentTemplateName()
     {
-        $possibleTemplates = [
-            //TBD
-        ];
+        $templateName = $this->input->getOption('template');
 
-        $template = $this->input->getOption('template');
+        if (!$templateName) {
+            return 'default';
+        }
 
-        return in_array($template, $possibleTemplates) ? $template : 'plain';
+        if (!array_key_exists($templateName, $this->templates)) {
+            $this->abort("Template {$templateName} was not found");
+        }
+
+        return $templateName;
     }
 
     /**
@@ -115,15 +196,15 @@ class MakeCommand extends AbstractMigrationCommand
     }
 
     /**
-     * Replace all dummies in the stub.
+     * Replace all placeholders in the stub.
      *
      * @param string $stub
      * @param string $className
      * @return string
      */
-    protected function replaceDummiesInStub($stub, $className)
+    protected function replacePlaceholdersInStub($stub, $className)
     {
-        return str_replace('DummyClassName', $className, $stub);
+        return str_replace('ClassPlaceholder', $className, $stub);
     }
 
     /**

@@ -1,6 +1,7 @@
 {
   "name": "arrilot/bitrix-migrations",
   "license": "MIT",
+  "description": "Database migrations for Bitrix CMS",
   "keywords": [
     "bitrix",
     "migrations"

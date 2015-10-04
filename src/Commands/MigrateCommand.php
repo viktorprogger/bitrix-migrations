@@ -2,6 +2,7 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
+use Arrilot\BitrixMigrations\Exceptions\MigrationException;
 use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
 use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
 use Arrilot\BitrixMigrations\Repositories\FileRepository;
@@ -97,8 +98,12 @@ class MigrateCommand extends AbstractMigrationCommand
 
         $migration = $this->getMigrationObjectByFileName($file);
 
-        if ($migration->up() === false) {
-            $this->abort("Migration up from {$file}.php returned false");
+        try {
+            if ($migration->up() === false) {
+                $this->abort("Migration up from {$file}.php returned false");
+            }
+        } catch (MigrationException $e) {
+            $this->abort($e->getMessage());
         }
 
         $this->database->logSuccessfulMigration($file);

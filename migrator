@@ -5,6 +5,7 @@ use Arrilot\BitrixMigrations\Commands\MakeCommand;
 use Arrilot\BitrixMigrations\Commands\InstallCommand;
 use Arrilot\BitrixMigrations\Commands\MigrateCommand;
 use Arrilot\BitrixMigrations\Commands\RollbackCommand;
+use Arrilot\BitrixMigrations\Commands\TemplatesCommand;
 use Arrilot\BitrixMigrations\Repositories\BitrixDatabaseRepository;
 use Symfony\Component\Console\Application;
 
@@ -13,16 +14,49 @@ include $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.ph
 
 $config = [
     'table' => 'migrations',
-    'dir' => $_SERVER['DOCUMENT_ROOT'].'/migrations'
+    'dir' => './migrations',
+    'composerPath' => $_SERVER["DOCUMENT_ROOT"],
 ];
 
 $database = new BitrixDatabaseRepository($config['table']);
 
-$app = new Application('Bitrix migrations');
+$makeCommand = new MakeCommand($config);
+$makeCommand->registerTemplate([
+    'name' => 'default',
+    'path' => $config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/migration.default.template',
+    'description' => 'Default migration template',
+]);
+$makeCommand->registerTemplate([
+    'name' => 'add_iblock',
+    'path' => $config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/migration.add_iblock.template',
+    'description' => 'Add iblock',
+]);
+$makeCommand->registerTemplate([
+    'name' => 'add_iblock_element_property',
+    'path' => $config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/migration.add_iblock_element_property.template',
+    'description' => 'Add iblock element property',
+    'aliases' => [
+        'add_iblock_prop',
+        'add_iblock_element_prop',
+        'add_iblock_element_property',
+        'add_element_prop',
+        'add_element_property',
+    ],
+]);
+$makeCommand->registerTemplate([
+    'name' => 'add_uf',
+    'path' => $config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/migration.add_uf.template',
+    'description' => 'Add User Field (For Users and Sections)',
+    'aliases' => [
+        'add_user_prop',
+        'add_user_field',
+    ],
+]);
 
+$app = new Application('Migrator');
+$app->add($makeCommand);
 $app->add(new InstallCommand($config, $database));
-$app->add(new MakeCommand($config));
 $app->add(new MigrateCommand($config, $database));
 $app->add(new RollbackCommand($config, $database));
-
+$app->add(new TemplatesCommand($makeCommand));
 $app->run();

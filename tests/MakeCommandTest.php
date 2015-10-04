@@ -19,11 +19,16 @@ class MakeCommandTest extends TestCase
     {
         $files = m::mock('Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface');
         $files->shouldReceive('createDirIfItDoesNotExist')->once();
-        $files->shouldReceive('getContent')->once()->andReturn('class DummyClassName {}');
+        $files->shouldReceive('getContent')->once()->andReturn('class ClassPlaceholder {}');
         $files->shouldReceive('putContent')->once();
 
         $command = $this->mockCommand($files);
         $command->shouldReceive('message')->once();
+        $command->registerTemplate([
+            'name' => 'default',
+            'path' => '/vendor/arrilot/bitrix-migrations/templates/migration.default.template',
+            'description' => 'Default migration template',
+        ]);
 
         $this->runCommand($command, ['test_migration']);
     }

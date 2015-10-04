@@ -2,6 +2,7 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
+use Arrilot\BitrixMigrations\Exceptions\MigrationException;
 use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
 use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
 use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
@@ -83,10 +84,15 @@ class RollbackCommand extends AbstractMigrationCommand
 
         $migration = $this->getMigrationObjectByFileName($file);
 
-        if ($migration->down() === false) {
-            $this->message("<error>Can't rollback migration:</error> {$file}.php");
-            $this->abort();
+        try {
+            if ($migration->down() === false) {
+                $this->message("<error>Can't rollback migration:</error> {$file}.php");
+                $this->abort();
+            }
+        } catch (MigrationException $e) {
+            $this->abort($e->getMessage());
         }
+
 
         $this->database->removeSuccessfulMigrationFromLog($file);
 
