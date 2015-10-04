@@ -24,7 +24,7 @@ class RollbackCommand extends AbstractMigrationCommand
         $ran = $this->database->getRanMigrations();
 
         if ($ran) {
-            $this->rollbackMigration($ran[count($ran)-1]);
+            $this->rollbackMigration($ran[count($ran) - 1]);
         } else {
             $this->info('Nothing to rollback');
         }
