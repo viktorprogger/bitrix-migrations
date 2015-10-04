@@ -90,10 +90,11 @@ abstract class AbstractMigrationCommand extends AbstractCommand
      * Require migration file.
      *
      * @param string $file
+     *
      * @return void
      */
     protected function requireMigrationFile($file)
     {
-        $this->files->requireFile($this->dir . '/' . $file . '.php');
+        $this->files->requireFile($this->dir.'/'.$file.'.php');
     }
 }
