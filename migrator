@@ -10,6 +10,7 @@ use Arrilot\BitrixMigrations\Repositories\BitrixDatabaseRepository;
 use Symfony\Component\Console\Application;
 
 $_SERVER["DOCUMENT_ROOT"] = __DIR__;
+define("NOT_CHECK_PERMISSIONS", true);
 include $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php";
 
 $config = [
