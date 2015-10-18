@@ -89,4 +89,16 @@ class FileRepository implements FileRepositoryInterface
     {
         return file_put_contents($path, $contents, $lock ? LOCK_EX : 0);
     }
+
+    /**
+     * Check if file exists.
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    public function exists($path)
+    {
+        return file_exists($path);
+    }
 }

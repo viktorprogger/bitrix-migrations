@@ -95,6 +95,18 @@ abstract class AbstractMigrationCommand extends AbstractCommand
      */
     protected function requireMigrationFile($file)
     {
-        $this->files->requireFile($this->dir.'/'.$file.'.php');
+        $this->files->requireFile($this->getMigrationFilePath($file));
+    }
+
+    /**
+     * Get path to a migration file.
+     *
+     * @param $file
+     *
+     * @return string
+     */
+    protected function getMigrationFilePath($file)
+    {
+        return $this->dir.'/'.$file.'.php';
     }
 }

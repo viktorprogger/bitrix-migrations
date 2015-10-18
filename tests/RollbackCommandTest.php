@@ -8,8 +8,9 @@ class RollbackCommandTest extends TestCase
 {
     protected function mockCommand($database, $files)
     {
-        return m::mock('Arrilot\BitrixMigrations\Commands\RollbackCommand[abort, info, message, getMigrationObjectByFileName]', [$this->getConfig(), $database, $files])
-            ->shouldAllowMockingProtectedMethods();
+        $command = 'Arrilot\BitrixMigrations\Commands\RollbackCommand[abort, info, message, getMigrationObjectByFileName,markRolledBackWithConfirmation]';
+
+        return m::mock($command, [$this->getConfig(), $database, $files])->shouldAllowMockingProtectedMethods();
     }
 
     public function testItRollbacksNothingIfThereIsNoMigrations()
@@ -36,6 +37,7 @@ class RollbackCommandTest extends TestCase
         ]);
 
         $files = m::mock('Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface');
+        $files->shouldReceive('exists')->once()->andReturn(true);
 
         // running the rollback
         $command = $this->mockCommand($database, $files);
@@ -46,6 +48,25 @@ class RollbackCommandTest extends TestCase
         $migration->shouldReceive('down')->once()->andReturn(true);
         $database->shouldReceive('removeSuccessfulMigrationFromLog')->with('2015_11_26_162220_bar')->once();
         $command->shouldReceive('message')->with('<info>Rolled back:</info> 2015_11_26_162220_bar.php')->once();
+
+        $this->runCommand($command);
+    }
+
+    public function testItRollbackNonExistingMigration()
+    {
+        // mocking friends
+        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
+        $database->shouldReceive('getRanMigrations')->once()->andReturn([
+            '2014_11_26_162220_foo',
+            '2015_11_26_162220_bar',
+        ]);
+
+        $files = m::mock('Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface');
+        $files->shouldReceive('exists')->once()->andReturn(false);
+
+        // running the rollback
+        $command = $this->mockCommand($database, $files);
+        $command->shouldReceive('markRolledBackWithConfirmation')->with('2015_11_26_162220_bar')->once();
 
         $this->runCommand($command);
     }

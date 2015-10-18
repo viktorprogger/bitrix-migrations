@@ -50,4 +50,13 @@ interface FileRepositoryInterface
      * @return int
      */
     public function putContent($path, $contents, $lock = false);
+
+    /**
+     * Check if file exists.
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    public function exists($path);
 }

@@ -3,6 +3,7 @@
 namespace Arrilot\BitrixMigrations\Commands;
 
 use Arrilot\BitrixMigrations\Exceptions\MigrationException;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class RollbackCommand extends AbstractMigrationCommand
 {
@@ -24,7 +25,10 @@ class RollbackCommand extends AbstractMigrationCommand
         $ran = $this->database->getRanMigrations();
 
         if ($ran) {
-            $this->rollbackMigration($ran[count($ran) - 1]);
+            $file = $ran[count($ran) - 1];
+            $this->files->exists($this->getMigrationFilePath($file))
+                ? $this->rollbackMigration($file)
+                : $this->markRolledBackWithConfirmation($file);
         } else {
             $this->info('Nothing to rollback');
         }
@@ -53,5 +57,24 @@ class RollbackCommand extends AbstractMigrationCommand
         $this->database->removeSuccessfulMigrationFromLog($file);
 
         $this->message("<info>Rolled back:</info> {$file}.php");
+    }
+
+    /**
+     * Ask a user to confirm rolling back non-existing migration and remove it from log.
+     *
+     * @param $file
+     *
+     * @return void
+     */
+    protected function markRolledBackWithConfirmation($file)
+    {
+        $helper = $this->getHelper('question');
+        $question = new ConfirmationQuestion("<error>Migration $file was not found.\r\nDo you want to mark it as rolled back? (y/n)</error>\r\n", false);
+
+        if (!$helper->ask($this->input, $this->output, $question)) {
+            $this->abort();
+        }
+
+        $this->database->removeSuccessfulMigrationFromLog($file);
     }
 }
