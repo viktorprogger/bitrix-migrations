@@ -5,6 +5,7 @@ namespace Arrilot\BitrixMigrations\Autocreate\Handlers;
 use Arrilot\BitrixMigrations\Autocreate\Manager;
 use Arrilot\BitrixMigrations\Autocreate\Notifier;
 use Arrilot\BitrixMigrations\Migrator;
+use Bitrix\Main\Entity\EventResult;
 
 abstract class AbstractHandlers
 {
@@ -30,16 +31,6 @@ abstract class AbstractHandlers
     }
 
     /**
-     * Determine if autocreation is turned on.
-     *
-     * @return bool
-     */
-    protected function isTurnedOn()
-    {
-        return Manager::isTurnedOn();
-    }
-
-    /**
      * Create migration and apply it.
      *
      * @param string $name
@@ -57,5 +48,22 @@ abstract class AbstractHandlers
         $this->notifier->newMigration($migration);
 
         return true;
+    }
+
+    /**
+     * Magic call to handler.
+     *
+     * @param string $method
+     * @param array $parameters
+     *
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        if (! Manager::isTurnedOn()) {
+            return new EventResult();
+        }
+
+        return call_user_func_array([$this, $method.'Handler'], $parameters);
     }
 }

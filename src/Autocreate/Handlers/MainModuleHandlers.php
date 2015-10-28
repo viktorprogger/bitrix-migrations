@@ -14,12 +14,8 @@ class MainModuleHandlers extends AbstractHandlers
      * @param array $fields
      * @return bool
      */
-    public function OnBeforeUserTypeAdd(&$fields)
+    public function OnBeforeUserTypeAddHandler(&$fields)
     {
-        if (!$this->isTurnedOn()) {
-            return true;
-        }
-
         $template = "auto_add_uf";
         $name = "{$template}_{$fields['FIELD_NAME']}_to_entity_{$fields['ENTITY_ID']}";
 
@@ -40,12 +36,8 @@ class MainModuleHandlers extends AbstractHandlers
 //     * @param array $fields
 //     * @return bool
 //     */
-//    public function OnBeforeUserTypeUpdate(&$fields)
+//    public function OnBeforeUserTypeUpdateHandler(&$fields)
 //    {
-//        if (!$this->isTurnedOn()) {
-//            return true;
-//        }
-//
 //        $property = CUserTypeEntity::getByID($fields['ID']);
 //
 //        $template = "auto_update_uf";
@@ -66,12 +58,8 @@ class MainModuleHandlers extends AbstractHandlers
      * @param int $id
      * @return bool
      */
-    public function OnBeforeUserTypeDelete($id)
+    public function OnBeforeUserTypeDeleteHandler($id)
     {
-        if (!$this->isTurnedOn()) {
-            return true;
-        }
-
         $fields = CUserTypeEntity::getByID($id);
 
         $template = "auto_delete_uf";
@@ -89,9 +77,8 @@ class MainModuleHandlers extends AbstractHandlers
     /**
      * Delete old notification.
      */
-    public function OnAfterEpilog()
+    public function OnAfterEpilogHandler()
     {
         $this->notifier->deleteNotificationFromPreviousMigration();
     }
-
 }

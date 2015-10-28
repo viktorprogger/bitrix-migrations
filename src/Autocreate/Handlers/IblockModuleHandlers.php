@@ -14,12 +14,8 @@ class IblockModuleHandlers extends AbstractHandlers
      * @param array $fields
      * @return bool
      */
-    public function OnBeforeIBlockAdd(&$fields)
+    public function OnBeforeIBlockAddHandler(&$fields)
     {
-        if (!$this->isTurnedOn()) {
-            return true;
-        }
-
         $template = "auto_add_iblock";
         $name = "{$template}_{$fields['CODE']}";
 
@@ -37,12 +33,8 @@ class IblockModuleHandlers extends AbstractHandlers
      * @param array $fields
      * @return bool
      */
-    public function OnBeforeIBlockUpdate(&$fields)
+    public function OnBeforeIBlockUpdateHandler(&$fields)
     {
-        if (!$this->isTurnedOn()) {
-            return true;
-        }
-
         $template = "auto_update_iblock";
         $name = "{$template}_{$fields['CODE']}";
 
@@ -60,12 +52,8 @@ class IblockModuleHandlers extends AbstractHandlers
      * @param int $id
      * @return bool
      */
-    public function OnBeforeIBlockDelete($id)
+    public function OnBeforeIBlockDeleteHandler($id)
     {
-        if (!$this->isTurnedOn()) {
-            return true;
-        }
-
         $fields = $this->getIBlockById($id);
 
         $template = "auto_delete_iblock";
@@ -84,12 +72,8 @@ class IblockModuleHandlers extends AbstractHandlers
      * @param array $fields
      * @return bool
      */
-    public function OnBeforeIBlockPropertyAdd(&$fields)
+    public function OnBeforeIBlockPropertyAddHandler(&$fields)
     {
-        if (!$this->isTurnedOn()) {
-            return true;
-        }
-
         $template = "auto_add_iblock_element_property";
         $name = "{$template}_{$fields['CODE']}_to_ib_{$fields['IBLOCK_ID']}";
 
@@ -108,12 +92,8 @@ class IblockModuleHandlers extends AbstractHandlers
      * @param array $fields
      * @return bool
      */
-    public function OnBeforeIBlockPropertyUpdate(&$fields)
+    public function OnBeforeIBlockPropertyUpdateHandler(&$fields)
     {
-        if (!$this->isTurnedOn()) {
-            return true;
-        }
-
         $dbFields = $this->collectPropertyFieldsFromDB($fields['ID'], $fields['IBLOCK_ID']);
 
         if (!$this->propertyHasChanged($fields, $dbFields)) {
@@ -138,12 +118,8 @@ class IblockModuleHandlers extends AbstractHandlers
      * @param int $id
      * @return bool
      */
-    public function OnBeforeIBlockPropertyDelete($id)
+    public function OnBeforeIBlockPropertyDeleteHandler($id)
     {
-        if (!$this->isTurnedOn()) {
-            return true;
-        }
-
         $fields = CIBlockProperty::getByID($id)->fetch();
 
         $template = "auto_delete_iblock_element_property";
@@ -219,7 +195,6 @@ class IblockModuleHandlers extends AbstractHandlers
     {
         foreach ($dbFields as $field => $value) {
             if (isset($fields[$field]) && ($fields[$field] != $value)) {
-                echo "<pre>"; var_dump($field); echo "</pre>";
                 return true;
             }
         }

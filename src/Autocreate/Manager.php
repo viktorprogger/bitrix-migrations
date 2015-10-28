@@ -23,18 +23,21 @@ class Manager
      */
     protected static $events = [
         'iblock' => [
-            'OnBeforeIBlockAdd',
-            'OnBeforeIBlockUpdate',
-            'OnBeforeIBlockDelete',
-            'OnBeforeIBlockPropertyAdd',
-            'OnBeforeIBlockPropertyUpdate',
-            'OnBeforeIBlockPropertyDelete',
+            'OnBeforeIBlockAdd' => 'onBeforeIBlockAdd',
+            'OnBeforeIBlockUpdate' => 'onBeforeIBlockUpdate',
+            'OnBeforeIBlockDelete' => 'onBeforeIBlockDelete',
+            'OnBeforeIBlockPropertyAdd' => 'onBeforeIBlockPropertyAdd',
+            'OnBeforeIBlockPropertyUpdate' => 'onBeforeIBlockPropertyUpdate',
+            'OnBeforeIBlockPropertyDelete' => 'onBeforeIBlockPropertyDelete',
         ],
         'main' => [
-            'OnBeforeUserTypeAdd',
-            //'OnBeforeUserTypeUpdate',
-            'OnBeforeUserTypeDelete',
-            'OnAfterEpilog'
+            'OnBeforeUserTypeAdd' => 'onBeforeUserTypeAdd',
+            //'OnBeforeUserTypeUpdate' => 'onBeforeUserTypeUpdate',
+            'OnBeforeUserTypeDelete' => 'onBeforeUserTypeDelete',
+            'OnAfterEpilog' => 'onAfterEpilog',
+        ],
+        'highloadblock' => [
+            '\\Bitrix\\Highloadblock\\Highloadblock::OnBeforeUpdate' => 'onBeforeUpdate',
         ]
     ];
 
@@ -94,8 +97,8 @@ class Manager
 
         foreach (static::$events as $module => $events) {
             $handlersObject = static::instantiateHandlersObjectForModule($module, $migrator);
-            foreach ($events as $event) {
-                $eventManager->addEventHandler($module, $event, [$handlersObject, $event], false, 5000);
+            foreach ($events as $event => $handler) {
+                $eventManager->addEventHandler($module, $event, [$handlersObject, $handler], false, 5000);
             }
         }
     }
