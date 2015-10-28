@@ -3,7 +3,7 @@
 use Arrilot\BitrixMigrations\BaseMigrations\BitrixMigration;
 use Arrilot\BitrixMigrations\Exceptions\MigrationException;
 
-class ClassPlaceholder extends BitrixMigration
+class __className__ extends BitrixMigration
 {
     /**
      * Run the migration.
@@ -13,10 +13,26 @@ class ClassPlaceholder extends BitrixMigration
      */
     public function up()
     {
-        $iblockId = $this->getIblockIdByCode('');
+        $ib = new CIBlock;
 
+        $iblockId = $ib->add([
+            'NAME' => '__',
+            'CODE' => '__',
+            'SITE_ID' => 's1',
+            'IBLOCK_TYPE_ID' => '__', //символьный код группы инфоблока,
+            'VERSION' => 2,
+            'GROUP_ID' => ['2' =>'R'],
+            'LIST_PAGE_URL' => '__',
+            'DETAIL_PAGE_URL' => '__',
+        ]);
+
+        if (!$iblockId) {
+            throw new MigrationException('Ошибка при добавлении инфоблока '.$ib->LAST_ERROR);
+        }
+
+        // свойства
         $propId = $this->addIblockElementProperty([
-            'NAME' => '',
+            'NAME' => '__',
             'SORT' => 500,
             'CODE' => '',
             'PROPERTY_TYPE' => 'L', // Список
@@ -37,8 +53,6 @@ class ClassPlaceholder extends BitrixMigration
      */
     public function down()
     {
-        $iblockId = $this->getIblockIdByCode('');
-
-        $this->deleteIblockElementPropertyByCode($iblockId, '');
+        $this->deleteIblockByCode('__');
     }
 }

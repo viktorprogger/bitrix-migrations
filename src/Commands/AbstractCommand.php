@@ -6,6 +6,7 @@ use DomainException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Exception;
 
 abstract class AbstractCommand extends Command
 {
@@ -52,7 +53,12 @@ abstract class AbstractCommand extends Command
             return $this->fire();
         } catch (DomainException $e) {
             return 1;
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
+            $this->error('Abort!');
         }
+
+        return null;
     }
 
     /**

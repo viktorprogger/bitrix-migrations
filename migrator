@@ -6,11 +6,13 @@ use Arrilot\BitrixMigrations\Commands\InstallCommand;
 use Arrilot\BitrixMigrations\Commands\MigrateCommand;
 use Arrilot\BitrixMigrations\Commands\RollbackCommand;
 use Arrilot\BitrixMigrations\Commands\TemplatesCommand;
-use Arrilot\BitrixMigrations\Repositories\BitrixDatabaseRepository;
+use Arrilot\BitrixMigrations\Commands\StatusCommand;
+use Arrilot\BitrixMigrations\Migrator;
+use Arrilot\BitrixMigrations\Storages\BitrixDatabaseStorage;
+use Arrilot\BitrixMigrations\TemplatesCollection;
 use Symfony\Component\Console\Application;
 
 $_SERVER["DOCUMENT_ROOT"] = __DIR__;
-define("NOT_CHECK_PERMISSIONS", true);
 include $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php";
 
 $config = [
@@ -19,45 +21,17 @@ $config = [
     'composerPath' => $_SERVER["DOCUMENT_ROOT"],
 ];
 
-$database = new BitrixDatabaseRepository($config['table']);
+$database = new BitrixDatabaseStorage($config['table']);
+$templatesCollection = new TemplatesCollection($config);
+$templatesCollection->registerBasicTemplates();
 
-$makeCommand = new MakeCommand($config, $database);
-$makeCommand->registerTemplate([
-    'name' => 'default',
-    'path' => $config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/migration.default.template',
-    'description' => 'Default migration template',
-]);
-$makeCommand->registerTemplate([
-    'name' => 'add_iblock',
-    'path' => $config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/migration.add_iblock.template',
-    'description' => 'Add iblock',
-]);
-$makeCommand->registerTemplate([
-    'name' => 'add_iblock_element_property',
-    'path' => $config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/migration.add_iblock_element_property.template',
-    'description' => 'Add iblock element property',
-    'aliases' => [
-        'add_iblock_prop',
-        'add_iblock_element_prop',
-        'add_iblock_element_property',
-        'add_element_prop',
-        'add_element_property',
-    ],
-]);
-$makeCommand->registerTemplate([
-    'name' => 'add_uf',
-    'path' => $config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/migration.add_uf.template',
-    'description' => 'Add User Field (For Users and Sections)',
-    'aliases' => [
-        'add_user_prop',
-        'add_user_field',
-    ],
-]);
+$migrator = new Migrator($config, $templatesCollection, $database);
 
 $app = new Application('Migrator');
-$app->add($makeCommand);
+$app->add(new MakeCommand($migrator));
 $app->add(new InstallCommand($config, $database));
-$app->add(new MigrateCommand($config, $database));
-$app->add(new RollbackCommand($config, $database));
-$app->add(new TemplatesCommand($makeCommand));
+$app->add(new MigrateCommand($migrator));
+$app->add(new RollbackCommand($migrator));
+$app->add(new TemplatesCommand($templatesCollection));
+$app->add(new StatusCommand($migrator));
 $app->run();

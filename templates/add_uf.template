@@ -3,7 +3,7 @@
 use Arrilot\BitrixMigrations\BaseMigrations\BitrixMigration;
 use Arrilot\BitrixMigrations\Exceptions\MigrationException;
 
-class ClassPlaceholder extends BitrixMigration
+class __className__ extends BitrixMigration
 {
     /**
      * Run the migration.
@@ -20,7 +20,7 @@ class ClassPlaceholder extends BitrixMigration
             */
             'ENTITY_ID' => 'USER',
             /* Код поля. Всегда должно начинаться с UF_ */
-            'FIELD_NAME' => '',
+            'FIELD_NAME' => '__',
             /* Указываем, что тип нового пользовательского свойства строка */
             'USER_TYPE_ID' => 'string',
             /*
@@ -103,10 +103,17 @@ class ClassPlaceholder extends BitrixMigration
      * Reverse the migration.
      *
      * @return mixed
+     * @throws MigrationException
      */
     public function down()
     {
-        $code = '';
-        $this->deleteUFByCode('USER', $code);
+        $code = '__';
+
+        $id = $this->getUFIdByCode('USER', $code);
+        if (!$id) {
+            throw new MigrationException('Не найдено пользовательское свойство для удаления');
+        }
+
+        (new CUserTypeEntity())->delete($id);
     }
 }

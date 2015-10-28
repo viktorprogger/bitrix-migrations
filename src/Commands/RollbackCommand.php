@@ -3,16 +3,39 @@
 namespace Arrilot\BitrixMigrations\Commands;
 
 use Arrilot\BitrixMigrations\Exceptions\MigrationException;
+use Arrilot\BitrixMigrations\Migrator;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class RollbackCommand extends AbstractMigrationCommand
+class RollbackCommand extends AbstractCommand
 {
+    /**
+     * Migrator instance
+     *
+     * @var Migrator
+     */
+    protected $migrator;
+
+    /**
+     * Constructor.
+     *
+     * @param Migrator $migrator
+     */
+    public function __construct(Migrator $migrator)
+    {
+        $this->migrator = $migrator;
+
+        parent::__construct();
+    }
+
     /**
      * Configures the current command.
      */
     protected function configure()
     {
-        $this->setName('rollback')->setDescription('Rollback the last migration');
+        $this->setName('rollback')
+            ->setDescription('Rollback the last migration')
+            ->addOption('hard', null, InputOption::VALUE_NONE, 'Rollback without running down()');
     }
 
     /**
@@ -22,59 +45,64 @@ class RollbackCommand extends AbstractMigrationCommand
      */
     protected function fire()
     {
-        $ran = $this->database->getRanMigrations();
+        $ran = $this->migrator->getRanMigrations();
 
-        if ($ran) {
-            $file = $ran[count($ran) - 1];
-            $this->files->exists($this->getMigrationFilePath($file))
-                ? $this->rollbackMigration($file)
-                : $this->markRolledBackWithConfirmation($file);
+        if (!$ran) {
+            return $this->info('Nothing to rollback');
+        }
+
+        $migration = $ran[count($ran) - 1];
+
+        return $this->input->getOption('hard')
+            ? $this->hardRollbackMigration($migration)
+            : $this->rollbackMigration($migration);
+    }
+
+    /**
+     * Call rollback.
+     *
+     * @param $migration
+     * @return null
+     */
+    protected function rollbackMigration($migration)
+    {
+        if ($this->migrator->doesMigrationFileExist($migration)) {
+            $this->migrator->rollbackMigration($migration);
+            $this->message("<info>Rolled back:</info> {$migration}.php");
         } else {
-            $this->info('Nothing to rollback');
+            $this->markRolledBackWithConfirmation($migration);
         }
     }
 
     /**
-     * Rollback a given migration.
+     * Call hard rollback.
      *
-     * @param string $file
-     *
-     * @return mixed
+     * @param $migration
+     * @return null
      */
-    protected function rollbackMigration($file)
+    protected function hardRollbackMigration($migration)
     {
-        $migration = $this->getMigrationObjectByFileName($file);
+        $this->migrator->removeSuccessfulMigrationFromLog($migration);
 
-        try {
-            if ($migration->down() === false) {
-                $this->message("<error>Can't rollback migration:</error> {$file}.php");
-                $this->abort();
-            }
-        } catch (MigrationException $e) {
-            $this->abort($e->getMessage());
-        }
-
-        $this->database->removeSuccessfulMigrationFromLog($file);
-
-        $this->message("<info>Rolled back:</info> {$file}.php");
+        $this->message("<info>Rolled back with --hard:</info> {$migration}.php");
     }
 
     /**
      * Ask a user to confirm rolling back non-existing migration and remove it from log.
      *
-     * @param $file
+     * @param $migration
      *
      * @return void
      */
-    protected function markRolledBackWithConfirmation($file)
+    protected function markRolledBackWithConfirmation($migration)
     {
         $helper = $this->getHelper('question');
-        $question = new ConfirmationQuestion("<error>Migration $file was not found.\r\nDo you want to mark it as rolled back? (y/n)</error>\r\n", false);
+        $question = new ConfirmationQuestion("<error>Migration $migration was not found.\r\nDo you want to mark it as rolled back? (y/n)</error>\r\n", false);
 
         if (!$helper->ask($this->input, $this->output, $question)) {
             $this->abort();
         }
 
-        $this->database->removeSuccessfulMigrationFromLog($file);
+        $this->migrator->removeSuccessfulMigrationFromLog($migration);
     }
 }

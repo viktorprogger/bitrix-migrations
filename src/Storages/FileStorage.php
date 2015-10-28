@@ -1,11 +1,11 @@
 <?php
 
-namespace Arrilot\BitrixMigrations\Repositories;
+namespace Arrilot\BitrixMigrations\Storages;
 
-use Arrilot\BitrixMigrations\Interfaces\FileRepositoryInterface;
+use Arrilot\BitrixMigrations\Interfaces\FileStorageInterface;
 use Exception;
 
-class FileRepository implements FileRepositoryInterface
+class FileStorage implements FileStorageInterface
 {
     /**
      * Get all of the migration files in a given path.
@@ -41,7 +41,7 @@ class FileRepository implements FileRepositoryInterface
      */
     public function requireFile($path)
     {
-        require $path;
+        require_once $path;
     }
 
     /**

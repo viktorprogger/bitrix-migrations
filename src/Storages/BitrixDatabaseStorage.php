@@ -1,10 +1,10 @@
 <?php
 
-namespace Arrilot\BitrixMigrations\Repositories;
+namespace Arrilot\BitrixMigrations\Storages;
 
-use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
+use Arrilot\BitrixMigrations\Interfaces\DatabaseStorageInterface;
 
-class BitrixDatabaseRepository implements DatabaseRepositoryInterface
+class BitrixDatabaseStorage implements DatabaseStorageInterface
 {
     /**
      * Bitrix $DB object.
@@ -21,7 +21,7 @@ class BitrixDatabaseRepository implements DatabaseRepositoryInterface
     protected $table;
 
     /**
-     * BitrixDatabaseRepository constructor.
+     * BitrixDatabaseStorage constructor.
      *
      * @param $table
      */

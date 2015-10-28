@@ -2,10 +2,29 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
-use Arrilot\BitrixMigrations\Exceptions\MigrationException;
+use Arrilot\BitrixMigrations\Migrator;
 
-class MigrateCommand extends AbstractMigrationCommand
+class MigrateCommand extends AbstractCommand
 {
+    /**
+     * Migrator instance
+     *
+     * @var Migrator
+     */
+    protected $migrator;
+
+    /**
+     * Constructor.
+     *
+     * @param Migrator $migrator
+     */
+    public function __construct(Migrator $migrator)
+    {
+        $this->migrator = $migrator;
+
+        parent::__construct();
+    }
+
     /**
      * Configures the current command.
      */
@@ -21,52 +40,15 @@ class MigrateCommand extends AbstractMigrationCommand
      */
     protected function fire()
     {
-        $migrations = $this->getMigrationsToRun();
+        $toRun = $this->migrator->getMigrationsToRun();
 
-        if (!empty($migrations)) {
-            foreach ($migrations as $migration) {
-                $this->runMigration($migration);
+        if (!empty($toRun)) {
+            foreach ($toRun as $migration) {
+                $this->migrator->runMigration($migration);
+                $this->message("<info>Migrated:</info> {$migration}.php");
             }
         } else {
             $this->info('Nothing to migrate');
         }
-    }
-
-    /**
-     * Get array of migrations that should be ran.
-     *
-     * @return array
-     */
-    protected function getMigrationsToRun()
-    {
-        $allMigrations = $this->files->getMigrationFiles($this->dir);
-
-        $ranMigrations = $this->database->getRanMigrations();
-
-        return array_diff($allMigrations, $ranMigrations);
-    }
-
-    /**
-     * Run a given migration.
-     *
-     * @param string $file
-     *
-     * @return mixed
-     */
-    protected function runMigration($file)
-    {
-        $migration = $this->getMigrationObjectByFileName($file);
-
-        try {
-            if ($migration->up() === false) {
-                $this->abort("Migration up from {$file}.php returned false");
-            }
-        } catch (MigrationException $e) {
-            $this->abort($e->getMessage());
-        }
-
-        $this->database->logSuccessfulMigration($file);
-
-        $this->message("<info>Migrated:</info> {$file}.php");
     }
 }

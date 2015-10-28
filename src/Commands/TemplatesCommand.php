@@ -2,26 +2,27 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
+use Arrilot\BitrixMigrations\TemplatesCollection;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
 
 class TemplatesCommand extends AbstractCommand
 {
     /**
-     * Table in DB to store migrations that have been already run.
+     * TemplatesCollection instance
      *
-     * @var MakeCommand
+     * @var TemplatesCollection
      */
-    protected $makeCommand;
+    protected $collection;
 
     /**
      * Constructor.
      *
-     * @param MakeCommand $makeCommand
+     * @param TemplatesCollection $collection
      */
-    public function __construct(MakeCommand $makeCommand)
+    public function __construct(TemplatesCollection $collection)
     {
-        $this->makeCommand = $makeCommand;
+        $this->collection = $collection;
 
         parent::__construct();
     }
@@ -48,13 +49,13 @@ class TemplatesCommand extends AbstractCommand
     }
 
     /**
-     * Collect and return templates from "MakeCommand".
+     * Collect and return templates from a Migrator.
      *
      * @return array
      */
     protected function collectRows()
     {
-        $rows = collect($this->makeCommand->getTemplates())
+        $rows = collect($this->collection->all())
             ->filter(function ($template) {
                 return $template['is_alias'] == false;
             })

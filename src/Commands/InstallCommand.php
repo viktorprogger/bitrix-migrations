@@ -2,14 +2,14 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
-use Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface;
+use Arrilot\BitrixMigrations\Interfaces\DatabaseStorageInterface;
 
 class InstallCommand extends AbstractCommand
 {
     /**
      * Interface that gives us access to the database.
      *
-     * @var DatabaseRepositoryInterface
+     * @var DatabaseStorageInterface
      */
     protected $database;
 
@@ -24,9 +24,9 @@ class InstallCommand extends AbstractCommand
      * Constructor.
      *
      * @param array                       $config
-     * @param DatabaseRepositoryInterface $database
+     * @param DatabaseStorageInterface $database
      */
-    public function __construct($config, DatabaseRepositoryInterface $database)
+    public function __construct($config, DatabaseStorageInterface $database)
     {
         $this->table = $config['table'];
         $this->database = $database;

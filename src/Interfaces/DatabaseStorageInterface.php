@@ -2,7 +2,7 @@
 
 namespace Arrilot\BitrixMigrations\Interfaces;
 
-interface DatabaseRepositoryInterface
+interface DatabaseStorageInterface
 {
     /**
      * Check if a given table already exists.

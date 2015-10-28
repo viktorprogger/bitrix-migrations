@@ -2,7 +2,7 @@
 
 namespace Arrilot\BitrixMigrations\Interfaces;
 
-interface FileRepositoryInterface
+interface FileStorageInterface
 {
     /**
      * Get all of the migration files in a given path.

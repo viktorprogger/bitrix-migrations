@@ -45,7 +45,12 @@ class BitrixMigration implements MigrationInterface
             throw new MigrationException('Не задан код инфоблока');
         }
 
-        $iblock = (new CIBlock())->GetList([], ['CODE' => $code])->fetch();
+        $filter = [
+            'CODE' => $code,
+            'CHECK_PERMISSIONS' => 'N',
+        ];
+
+        $iblock = (new CIBlock())->GetList([], $filter)->fetch();
 
         if (!$iblock['ID']) {
             throw new MigrationException("Не удалось найти инфоблок с кодом '{$code}'");
@@ -117,17 +122,9 @@ class BitrixMigration implements MigrationInterface
             throw new MigrationException('Не задан код свойства');
         }
 
-        $filter = [
-            'CODE'      => $code,
-            'IBLOCK_ID' => $iblockId,
-        ];
+        $id = $this->getIblockPropIdByCode($code, $iblockId);
 
-        $prop = CIBlockProperty::getList(['sort' => 'asc', 'name' => 'asc'], $filter)->getNext();
-        if (!$prop || !$prop['ID']) {
-            throw new MigrationException("Не удалось найти свойство с кодом '{$code}'");
-        }
-
-        CIBlockProperty::Delete($prop['ID']);
+        CIBlockProperty::Delete($id);
     }
 
     /**
@@ -161,24 +158,6 @@ class BitrixMigration implements MigrationInterface
     }
 
     /**
-     * Delete UF by its code.
-     *
-     * @param string $entity
-     * @param string $code
-     *
-     * @throws MigrationException
-     */
-    public function deleteUFByCode($entity, $code)
-    {
-        $id = $this->getUFIdByCode($entity, $code);
-        if (!$id) {
-            throw new MigrationException('Не найдено пользовательское свойство для удаления');
-        }
-
-        (new CUserTypeEntity())->delete($id);
-    }
-
-    /**
      * Get UF by its code.
      *
      * @param string $entity
@@ -207,5 +186,28 @@ class BitrixMigration implements MigrationInterface
         }
 
         return $arField['ID'];
+    }
+
+    /**
+     * @param $code
+     * @param $iblockId
+     *
+     * @return array
+     *
+     * @throws MigrationException
+     */
+    protected function getIblockPropIdByCode($code, $iblockId)
+    {
+        $filter = [
+            'CODE'      => $code,
+            'IBLOCK_ID' => $iblockId,
+        ];
+
+        $prop = CIBlockProperty::getList(['sort' => 'asc', 'name' => 'asc'], $filter)->getNext();
+        if (!$prop || !$prop['ID']) {
+            throw new MigrationException("Не удалось найти свойство с кодом '{$code}'");
+        }
+
+        return $prop['ID'];
     }
 }

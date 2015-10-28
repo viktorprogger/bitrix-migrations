@@ -1,0 +1,90 @@
+<?php
+
+namespace Arrilot\BitrixMigrations\Commands;
+
+use Arrilot\BitrixMigrations\Migrator;
+
+class StatusCommand extends AbstractCommand
+{
+    /**
+     * Migrator instance
+     *
+     * @var Migrator
+     */
+    protected $migrator;
+
+    /**
+     * Constructor.
+     *
+     * @param Migrator $migrator
+     */
+    public function __construct(Migrator $migrator)
+    {
+        $this->migrator = $migrator;
+
+        parent::__construct();
+    }
+
+    /**
+     * Configures the current command.
+     */
+    protected function configure()
+    {
+        $this->setName('status')->setDescription('Show status about last migrations');
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return null|int
+     */
+    protected function fire()
+    {
+        $this->showOldMigrations();
+
+        $this->output->write("\r\n");
+
+        $this->showNewMigrations();
+    }
+
+    /**
+     * Show old migrations
+     *
+     * @return void
+     */
+    protected function showOldMigrations()
+    {
+        $old = collect($this->migrator->getRanMigrations());
+
+        $this->output->writeln("<fg=yellow>Old migrations:\r\n</>");
+
+        $max = 5;
+        if ($old->count() > $max) {
+            $this->output->writeln("<fg=yellow>...</>");
+
+            $old = $old->take(-$max);
+        }
+
+        foreach ($old as $migration) {
+            $this->output->writeln("<fg=yellow>{$migration}.php</>");
+        }
+
+    }
+
+    /**
+     * Show new migrations
+     *
+     * @return void
+     */
+    protected function showNewMigrations()
+    {
+        $new = collect($this->migrator->getMigrationsToRun());
+
+        $this->output->writeln("<fg=green>New migrations:\r\n</>");
+
+        foreach ($new as $migration) {
+            $this->output->writeln("<fg=green>{$migration}.php</>");
+        }
+
+    }
+}

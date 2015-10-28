@@ -3,7 +3,7 @@
 use Arrilot\BitrixMigrations\BaseMigrations\BitrixMigration;
 use Arrilot\BitrixMigrations\Exceptions\MigrationException;
 
-class ClassPlaceholder extends BitrixMigration
+class __className__ extends BitrixMigration
 {
     /**
      * Run the migration.
