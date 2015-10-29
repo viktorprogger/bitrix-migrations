@@ -2,10 +2,13 @@
 
 namespace Arrilot\BitrixMigrations\Autocreate;
 
-use Arrilot\BitrixMigrations\Autocreate\Handlers\AbstractHandlers;
+use Arrilot\BitrixMigrations\Autocreate\Handlers\HandlerInterface;
+use Arrilot\BitrixMigrations\Exceptions\SkipHandlerException;
+use Arrilot\BitrixMigrations\Exceptions\StopHandlerException;
 use Arrilot\BitrixMigrations\Migrator;
 use Arrilot\BitrixMigrations\TemplatesCollection;
 use Bitrix\Main\EventManager;
+use Bitrix\Main\Entity\EventResult;
 
 class Manager
 {
@@ -17,27 +20,36 @@ class Manager
     protected static $isTurnedOn = false;
 
     /**
-     * Events that are used by autocreation.
+     * @var Migrator
+     */
+    protected static $migrator;
+
+    /**
+     * Handlers that are used by autocreation.
      *
      * @var array
      */
-    protected static $events = [
+    protected static $handlers = [
         'iblock' => [
-            'OnBeforeIBlockAdd' => 'onBeforeIBlockAdd',
-            'OnBeforeIBlockUpdate' => 'onBeforeIBlockUpdate',
-            'OnBeforeIBlockDelete' => 'onBeforeIBlockDelete',
-            'OnBeforeIBlockPropertyAdd' => 'onBeforeIBlockPropertyAdd',
-            'OnBeforeIBlockPropertyUpdate' => 'onBeforeIBlockPropertyUpdate',
-            'OnBeforeIBlockPropertyDelete' => 'onBeforeIBlockPropertyDelete',
+            'OnBeforeIBlockAdd' => 'OnBeforeIBlockAdd',
+            'OnBeforeIBlockUpdate' => 'OnBeforeIBlockUpdate',
+            'OnBeforeIBlockDelete' => 'OnBeforeIBlockDelete',
+            'OnBeforeIBlockPropertyAdd' => 'OnBeforeIBlockPropertyAdd',
+            'OnBeforeIBlockPropertyUpdate' => 'OnBeforeIBlockPropertyUpdate',
+            'OnBeforeIBlockPropertyDelete' => 'OnBeforeIBlockPropertyDelete',
         ],
         'main' => [
-            'OnBeforeUserTypeAdd' => 'onBeforeUserTypeAdd',
-            //'OnBeforeUserTypeUpdate' => 'onBeforeUserTypeUpdate',
-            'OnBeforeUserTypeDelete' => 'onBeforeUserTypeDelete',
-            'OnAfterEpilog' => 'onAfterEpilog',
+            'OnBeforeUserTypeAdd' => 'OnBeforeUserTypeAdd',
+            'OnBeforeUserTypeDelete' => 'OnBeforeUserTypeDelete',
+            'OnAfterEpilog' => 'DeleteNotificationFromPreviousMigration',
+            'OnBeforeGroupAdd' => 'OnBeforeGroupAdd',
+            'OnBeforeGroupUpdate' => 'OnBeforeGroupUpdate',
+            'OnBeforeGroupDelete' => 'OnBeforeGroupDelete',
         ],
         'highloadblock' => [
-            '\\Bitrix\\Highloadblock\\Highloadblock::OnBeforeUpdate' => 'onBeforeUpdate',
+            '\\Bitrix\\Highloadblock\\Highloadblock::OnBeforeAdd' => 'OnBeforeHLBlockAdd',
+            '\\Bitrix\\Highloadblock\\Highloadblock::OnBeforeUpdate' => 'OnBeforeHLBlockUpdate',
+            '\\Bitrix\\Highloadblock\\Highloadblock::OnBeforeDelete' => 'OnBeforeHLBlockDelete',
         ]
     ];
 
@@ -51,7 +63,9 @@ class Manager
         $templates = new TemplatesCollection($config);
         $templates->registerAutoTemplates();
 
-        static::addEventHandlers(new Migrator($config, $templates));
+        static::$migrator = new Migrator($config, $templates);
+
+        static::addEventHandlers();
 
         static::turnOn();
     }
@@ -87,34 +101,91 @@ class Manager
     }
 
     /**
-     * Add event handlers
-     *
-     * @param Migrator $migrator
+     * Add event handlers.
      */
-    protected static function addEventHandlers(Migrator $migrator)
+    protected static function addEventHandlers()
     {
         $eventManager = EventManager::getInstance();
 
-        foreach (static::$events as $module => $events) {
-            $handlersObject = static::instantiateHandlersObjectForModule($module, $migrator);
-            foreach ($events as $event => $handler) {
-                $eventManager->addEventHandler($module, $event, [$handlersObject, $handler], false, 5000);
+        foreach (static::$handlers as $module => $handlers) {
+            foreach ($handlers as $event => $handler) {
+                $eventManager->addEventHandler($module, $event, [__CLASS__, $handler], false, 5000);
             }
         }
     }
 
     /**
-     * Instantiate handlers class object.
+     * Magic static call to a handler.
      *
-     * @param $module
-     * @param $migrator
+     * @param string $method
+     * @param array $parameters
      *
-     * @return AbstractHandlers
+     * @return mixed
      */
-    protected static function instantiateHandlersObjectForModule($module, $migrator)
+    public function __callStatic($method, $parameters)
     {
-        $class = __NAMESPACE__.'\\Handlers\\'.ucfirst($module).'ModuleHandlers';
+        $eventResult = new EventResult();
 
-        return new $class($migrator);
+        if (!static::isTurnedOn()) {
+            return $eventResult;
+        }
+
+        if ($method === 'DeleteNotificationFromPreviousMigration') {
+            $notifier = new Notifier();
+            $notifier->deleteNotificationFromPreviousMigration();
+
+            return $eventResult;
+        }
+
+        try {
+            $handler = static::instantiateHandler($method, $parameters);
+        } catch (SkipHandlerException $e) {
+            return $eventResult;
+        }
+        catch (StopHandlerException $e) {
+            global $APPLICATION;
+            $APPLICATION->throwException($e->getMessage());
+
+            return false;
+        }
+
+        static::createMigration($handler);
+
+        return $eventResult;
+    }
+
+    /**
+     * Instantiate handler.
+     *
+     * @param string $handler
+     * @param array $parameters
+     *
+     * @return mixed
+     */
+    protected static function instantiateHandler($handler, $parameters)
+    {
+        $class = __NAMESPACE__.'\\Handlers\\'.$handler;
+
+        return new $class($parameters);
+    }
+
+    /**
+     * Create migration and apply it.
+     *
+     * @param HandlerInterface $handler
+     */
+    protected static function createMigration(HandlerInterface $handler)
+    {
+        $migrator = static::$migrator;
+        $notifier = new Notifier();
+
+        $migration = $migrator->createMigration(
+            strtolower($handler->getName()),
+            $handler->getTemplate(),
+            $handler->getReplace()
+        );
+
+        $migrator->logSuccessfulMigration($migration);
+        $notifier->newMigration($migration);
     }
 }

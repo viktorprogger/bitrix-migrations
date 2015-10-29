@@ -4,12 +4,29 @@ namespace Arrilot\BitrixMigrations\BaseMigrations;
 
 use Arrilot\BitrixMigrations\Exceptions\MigrationException;
 use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
+use Bitrix\Main\Application;
+use Bitrix\Main\DB\Connection;
 use CIBlock;
 use CIBlockProperty;
 use CUserTypeEntity;
 
 class BitrixMigration implements MigrationInterface
 {
+    /**
+     * DB connection.
+     *
+     * @var Connection
+     */
+    protected $db;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->db = Application::getConnection();
+    }
+
     /**
      * Run the migration.
      *
@@ -70,17 +87,15 @@ class BitrixMigration implements MigrationInterface
      */
     protected function deleteIblockByCode($code)
     {
-        global $DB;
-
         $id = $this->getIblockIdByCode($code);
 
-        $DB->StartTransaction();
+        $this->db->startTransaction();
         if (!CIBlock::Delete($id)) {
-            $DB->Rollback();
+            $this->db->rollbackTransaction();
             throw new MigrationException('Ошибка при удалении инфоблока');
         }
 
-        $DB->Commit();
+        $this->db->commitTransaction();
     }
 
     /**

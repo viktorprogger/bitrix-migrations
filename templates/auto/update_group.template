@@ -2,6 +2,7 @@
 
 use Arrilot\BitrixMigrations\BaseMigrations\BitrixMigration;
 use Arrilot\BitrixMigrations\Exceptions\MigrationException;
+use Bitrix\Highloadblock\HighloadBlockTable;
 
 class __className__ extends BitrixMigration
 {
@@ -13,15 +14,14 @@ class __className__ extends BitrixMigration
      */
     public function up()
     {
-        $id = $this->getIblockIdByCode(__code__);
+        $group = new CGroup;
+        $fields = __fields__;
 
-        $this->db->startTransaction();
-        if (!CIBlock::delete($id)) {
-            $this->db->rollbackTransaction();
-            throw new MigrationException('Ошибка при удалении инфоблока');
+        $group->update(__id__, $fields);
+
+        if ($group->LAST_ERROR) {
+            throw new MigrationException('Ошибка при обновлении группы '.$group->LAST_ERROR);
         }
-
-        $this->db->commitTransaction();
     }
 
     /**

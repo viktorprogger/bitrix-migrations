@@ -63,7 +63,28 @@ class TemplatesCollection
                     'add_element_prop',
                     'add_element_property',
                 ],
-            ]
+            ],
+            [
+                'name' => 'add_table',
+                'path' => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_table.template',
+                'description' => 'Create table',
+                'aliases' => [
+                    'create_table',
+                ],
+            ],
+            [
+                'name' => 'delete_table',
+                'path' => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/delete_table.template',
+                'description' => 'Drop table',
+                'aliases' => [
+                    'drop_table',
+                ],
+            ],
+            [
+                'name' => 'query',
+                'path' => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/query.template',
+                'description' => 'Simple database query',
+            ],
         ];
 
         foreach ($templates as $template) {
@@ -86,6 +107,12 @@ class TemplatesCollection
             'add_uf',
             'update_uf',
             'delete_uf',
+            'add_hlblock',
+            'update_hlblock',
+            'delete_hlblock',
+            'add_group',
+            'update_group',
+            'delete_group',
         ];
 
         foreach ($templates as $template) {

@@ -21,7 +21,7 @@ class Notifier
     public function newMigration($migration)
     {
         $notification = [
-            'MESSAGE' => 'Migration '.$migration.' has been created and applied.',
+            'MESSAGE' => 'Migration <strong>'.$migration.'</strong> has been created and applied.',
             'TAG' => $this->tag,
             'MODULE_ID' => 'main',
             'ENABLE_CLOSE' => 'Y'
