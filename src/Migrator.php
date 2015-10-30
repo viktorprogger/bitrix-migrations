@@ -20,6 +20,13 @@ class Migrator
     protected $config;
 
     /**
+     * Directory to store m.
+     *
+     * @var string
+     */
+    protected $dir;
+
+    /**
      * Files interactions.
      *
      * @var FileStorageInterface

@@ -4,7 +4,7 @@ namespace Arrilot\Tests\BitrixMigrations;
 
 use Mockery as m;
 
-class InstallCommandTest extends TestCase
+class InstallCommandTest extends CommandTestCase
 {
     protected function mockCommand($database)
     {
@@ -14,7 +14,7 @@ class InstallCommandTest extends TestCase
 
     public function testItCreatesMigrationTable()
     {
-        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
+        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseStorageInterface');
         $database->shouldReceive('checkMigrationTableExistence')->once()->andReturn(false);
         $database->shouldReceive('createMigrationTable')->once();
 
@@ -25,7 +25,7 @@ class InstallCommandTest extends TestCase
 
     public function testItDoesNotCreateATableIfItExists()
     {
-        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseRepositoryInterface');
+        $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseStorageInterface');
         $database->shouldReceive('checkMigrationTableExistence')->once()->andReturn(true);
         $database->shouldReceive('createMigrationTable')->never();
 

@@ -67,10 +67,11 @@ class RollbackCommand extends AbstractCommand
     {
         if ($this->migrator->doesMigrationFileExist($migration)) {
             $this->migrator->rollbackMigration($migration);
-            $this->message("<info>Rolled back:</info> {$migration}.php");
         } else {
             $this->markRolledBackWithConfirmation($migration);
         }
+
+        $this->message("<info>Rolled back:</info> {$migration}.php");
     }
 
     /**

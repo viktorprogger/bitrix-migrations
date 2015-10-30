@@ -164,7 +164,7 @@ class TemplatesCollection
     /**
      * Find out template name from user input.
      *
-     * @param $template
+     * @param string|null $template
      *
      * @return string
      */

@@ -54,8 +54,8 @@ class MakeCommand extends AbstractCommand
      */
     protected function fire()
     {
-        $fileName = $this->migrator->createMigration($this->input->getArgument('name'), $this->input->getOption('template'));
+        $migration = $this->migrator->createMigration($this->input->getArgument('name'), $this->input->getOption('template'));
 
-        $this->message("<info>Migration created:</info> {$fileName}.php");
+        $this->message("<info>Migration created:</info> {$migration}.php");
     }
 }
