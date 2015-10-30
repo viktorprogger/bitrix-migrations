@@ -2,7 +2,6 @@
 
 namespace Arrilot\BitrixMigrations\Commands;
 
-use Arrilot\BitrixMigrations\Exceptions\MigrationException;
 use Arrilot\BitrixMigrations\Migrator;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -47,7 +46,7 @@ class RollbackCommand extends AbstractCommand
     {
         $ran = $this->migrator->getRanMigrations();
 
-        if (!$ran) {
+        if (empty($ran)) {
             return $this->info('Nothing to rollback');
         }
 

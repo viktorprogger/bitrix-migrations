@@ -3,13 +3,14 @@
 namespace Arrilot\BitrixMigrations\Storages;
 
 use Arrilot\BitrixMigrations\Interfaces\DatabaseStorageInterface;
+use CDatabase;
 
 class BitrixDatabaseStorage implements DatabaseStorageInterface
 {
     /**
      * Bitrix $DB object.
      *
-     * @var \CDatabase
+     * @var CDatabase
      */
     protected $db;
 

@@ -7,7 +7,6 @@ use Arrilot\BitrixMigrations\Interfaces\FileStorageInterface;
 use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
 use Arrilot\BitrixMigrations\Storages\BitrixDatabaseStorage;
 use Arrilot\BitrixMigrations\Storages\FileStorage;
-use DateTime;
 use Exception;
 use Illuminate\Support\Str;
 
@@ -62,9 +61,9 @@ class Migrator
     /**
      * Create migration file.
      *
-     * @param $name - migration name
-     * @param $templateName
-     * @param $replace - array of placeholders that should be replaced with a given values.
+     * @param string $name - migration name
+     * @param string $templateName
+     * @param array $replace - array of placeholders that should be replaced with a given values.
      *
      * @return string
      */
@@ -127,9 +126,9 @@ class Migrator
     /**
      * Log successful migration.
      *
-     * @param $migration
+     * @param string $migration
      *
-     * @return bool
+     * @return void
      */
     public function logSuccessfulMigration($migration)
     {
@@ -190,7 +189,7 @@ class Migrator
     /**
      * Construct migration file name from migration name and current time.
      *
-     * @param $name
+     * @param string $name
      *
      * @return string
      */
@@ -288,7 +287,7 @@ class Migrator
     /**
      * Get path to a migration file.
      *
-     * @param $file
+     * @param string $file
      *
      * @return string
      */

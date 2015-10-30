@@ -9,6 +9,13 @@ use CIBlockPropertyEnum;
 class OnBeforeIBlockPropertyUpdate extends BaseHandler implements HandlerInterface
 {
     /**
+     * Old property fields from DB.
+     *
+     * @var array
+     */
+    protected $dbFields;
+
+    /**
      * Constructor.
      *
      * @param array $params
