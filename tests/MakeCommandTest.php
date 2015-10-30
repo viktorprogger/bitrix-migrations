@@ -20,6 +20,6 @@ class MakeCommandTest extends CommandTestCase
         $command = $this->mockCommand($migrator);
         $command->shouldReceive('message')->once();
 
-        $this->runCommand($command, ['test_migration']);
+        $this->runCommand($command, ['name' => 'test_migration']);
     }
 }
