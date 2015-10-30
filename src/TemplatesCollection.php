@@ -170,7 +170,7 @@ class TemplatesCollection
      */
     public function selectTemplate($template)
     {
-        if (!$template) {
+        if (is_null($template)) {
             return 'default';
         }
 
