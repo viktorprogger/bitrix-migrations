@@ -33,7 +33,7 @@ class OnBeforeUserTypeDelete extends BaseHandler implements HandlerInterface
      */
     public function getTemplate()
     {
-        return "auto_delete_uf";
+        return 'auto_delete_uf';
     }
 
     /**
@@ -45,9 +45,9 @@ class OnBeforeUserTypeDelete extends BaseHandler implements HandlerInterface
     {
         return [
             'iblockId' => $this->fields['IBLOCK_ID'],
-            'code' => "'".$this->fields['FIELD_NAME']."'",
-            'entity' => "'".$this->fields['ENTITY_ID']."'",
-            'fields' => var_export($this->fields, true),
+            'code'     => "'".$this->fields['FIELD_NAME']."'",
+            'entity'   => "'".$this->fields['ENTITY_ID']."'",
+            'fields'   => var_export($this->fields, true),
         ];
     }
 }

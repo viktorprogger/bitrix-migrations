@@ -31,7 +31,7 @@ class OnBeforeIBlockPropertyAdd extends BaseHandler implements HandlerInterface
      */
     public function getTemplate()
     {
-        return "auto_add_iblock_element_property";
+        return 'auto_add_iblock_element_property';
     }
 
     /**
@@ -42,9 +42,9 @@ class OnBeforeIBlockPropertyAdd extends BaseHandler implements HandlerInterface
     public function getReplace()
     {
         return [
-            'fields' => var_export($this->fields, true),
+            'fields'   => var_export($this->fields, true),
             'iblockId' => $this->fields['IBLOCK_ID'],
-            'code' => "'".$this->fields['CODE']."'",
+            'code'     => "'".$this->fields['CODE']."'",
         ];
     }
 }

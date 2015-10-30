@@ -31,8 +31,8 @@ class TemplatesCollection
         $this->config = $config;
 
         $this->registerTemplate([
-            'name' => 'default',
-            'path' => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/default.template',
+            'name'        => 'default',
+            'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/default.template',
             'description' => 'Default migration template',
         ]);
     }
@@ -44,20 +44,20 @@ class TemplatesCollection
     {
         $templates = [
             [
-                'name' => 'add_iblock',
-                'path' => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_iblock.template',
+                'name'        => 'add_iblock',
+                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_iblock.template',
                 'description' => 'Add iblock',
             ],
             [
-                'name' => 'add_iblock',
-                'path' => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_iblock.template',
+                'name'        => 'add_iblock',
+                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_iblock.template',
                 'description' => 'Add iblock',
             ],
             [
-                'name' => 'add_iblock_element_property',
-                'path' => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_iblock_element_property.template',
+                'name'        => 'add_iblock_element_property',
+                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_iblock_element_property.template',
                 'description' => 'Add iblock element property',
-                'aliases' => [
+                'aliases'     => [
                     'add_iblock_prop',
                     'add_iblock_element_prop',
                     'add_element_prop',
@@ -65,24 +65,24 @@ class TemplatesCollection
                 ],
             ],
             [
-                'name' => 'add_table',
-                'path' => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_table.template',
+                'name'        => 'add_table',
+                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_table.template',
                 'description' => 'Create table',
-                'aliases' => [
+                'aliases'     => [
                     'create_table',
                 ],
             ],
             [
-                'name' => 'delete_table',
-                'path' => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/delete_table.template',
+                'name'        => 'delete_table',
+                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/delete_table.template',
                 'description' => 'Drop table',
-                'aliases' => [
+                'aliases'     => [
                     'drop_table',
                 ],
             ],
             [
-                'name' => 'query',
-                'path' => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/query.template',
+                'name'        => 'query',
+                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/query.template',
                 'description' => 'Simple database query',
             ],
         ];

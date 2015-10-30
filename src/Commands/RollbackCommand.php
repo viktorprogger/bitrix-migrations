@@ -9,7 +9,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 class RollbackCommand extends AbstractCommand
 {
     /**
-     * Migrator instance
+     * Migrator instance.
      *
      * @var Migrator
      */
@@ -61,6 +61,7 @@ class RollbackCommand extends AbstractCommand
      * Call rollback.
      *
      * @param $migration
+     *
      * @return null
      */
     protected function rollbackMigration($migration)
@@ -78,6 +79,7 @@ class RollbackCommand extends AbstractCommand
      * Call hard rollback.
      *
      * @param $migration
+     *
      * @return null
      */
     protected function hardRollbackMigration($migration)

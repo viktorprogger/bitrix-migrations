@@ -31,14 +31,14 @@ class MigratorTest extends CommandTestCase
     }
 
     /**
-     * Create migrator
+     * Create migrator.
      */
     protected function createMigrator($database, $files)
     {
         $config = [
-            'table' => 'migrations',
-            'dir'   => 'migrations',
-            'composerPath' => '/var/www/'
+            'table'        => 'migrations',
+            'dir'          => 'migrations',
+            'composerPath' => '/var/www/',
         ];
 
         $templatesCollection = new TemplatesCollection($config);

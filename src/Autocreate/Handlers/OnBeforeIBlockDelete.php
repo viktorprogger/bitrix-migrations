@@ -33,7 +33,7 @@ class OnBeforeIBlockDelete extends BaseHandler implements HandlerInterface
      */
     public function getTemplate()
     {
-        return "auto_delete_iblock";
+        return 'auto_delete_iblock';
     }
 
     /**
@@ -52,12 +52,13 @@ class OnBeforeIBlockDelete extends BaseHandler implements HandlerInterface
      * Get iblock by id without checking permissions.
      *
      * @param $id
+     *
      * @return array
      */
     protected function getIBlockById($id)
     {
         $filter = [
-            'ID' => $id,
+            'ID'                => $id,
             'CHECK_PERMISSIONS' => 'N',
         ];
 

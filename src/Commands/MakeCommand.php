@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 class MakeCommand extends AbstractCommand
 {
     /**
-     * Migrator instance
+     * Migrator instance.
      *
      * @var Migrator
      */

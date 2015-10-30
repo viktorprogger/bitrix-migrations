@@ -48,7 +48,7 @@ class OnBeforeHLBlockUpdate extends BaseHandler implements HandlerInterface
      */
     public function getName()
     {
-        return "auto_update_hlblock_".$this->fields['TABLE_NAME'];
+        return 'auto_update_hlblock_'.$this->fields['TABLE_NAME'];
     }
 
     /**
@@ -58,7 +58,7 @@ class OnBeforeHLBlockUpdate extends BaseHandler implements HandlerInterface
      */
     public function getTemplate()
     {
-        return "auto_update_hlblock";
+        return 'auto_update_hlblock';
     }
 
     /**
@@ -69,7 +69,7 @@ class OnBeforeHLBlockUpdate extends BaseHandler implements HandlerInterface
     public function getReplace()
     {
         return [
-            'id' => $this->id,
+            'id'     => $this->id,
             'fields' => var_export($this->fields, true),
         ];
     }
@@ -82,7 +82,7 @@ class OnBeforeHLBlockUpdate extends BaseHandler implements HandlerInterface
     protected function fieldsHaveBeenChanged()
     {
         $old = HighloadBlockTable::getById($this->id)->fetch();
-        $new = $this->fields + [ 'ID' => (string)$this->id ];
+        $new = $this->fields + ['ID' => (string) $this->id];
 
         return $new != $old;
     }

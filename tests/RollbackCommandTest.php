@@ -31,7 +31,7 @@ class RollbackCommandTest extends CommandTestCase
         $migrator = m::mock('Arrilot\BitrixMigrations\Migrator');
         $migrator->shouldReceive('getRanMigrations')->once()->andReturn([
             '2014_11_26_162220_foo',
-            '2015_11_26_162220_bar'
+            '2015_11_26_162220_bar',
         ]);
         $migrator->shouldReceive('doesMigrationFileExist')->once()->andReturn(true);
         $migrator->shouldReceive('rollbackMigration')->once();
@@ -49,7 +49,7 @@ class RollbackCommandTest extends CommandTestCase
         $migrator = m::mock('Arrilot\BitrixMigrations\Migrator');
         $migrator->shouldReceive('getRanMigrations')->once()->andReturn([
             '2014_11_26_162220_foo',
-            '2015_11_26_162220_bar'
+            '2015_11_26_162220_bar',
         ]);
         $migrator->shouldReceive('doesMigrationFileExist')->once()->andReturn(false);
         $migrator->shouldReceive('rollbackMigration')->never();

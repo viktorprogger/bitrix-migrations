@@ -7,7 +7,7 @@ use Arrilot\BitrixMigrations\Migrator;
 class MigrateCommand extends AbstractCommand
 {
     /**
-     * Migrator instance
+     * Migrator instance.
      *
      * @var Migrator
      */

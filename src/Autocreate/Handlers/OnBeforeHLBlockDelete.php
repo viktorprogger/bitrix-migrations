@@ -44,7 +44,7 @@ class OnBeforeHLBlockDelete extends BaseHandler implements HandlerInterface
      */
     public function getName()
     {
-        return "auto_delete_hlblock_".$this->fields['TABLE_NAME'];
+        return 'auto_delete_hlblock_'.$this->fields['TABLE_NAME'];
     }
 
     /**
@@ -54,7 +54,7 @@ class OnBeforeHLBlockDelete extends BaseHandler implements HandlerInterface
      */
     public function getTemplate()
     {
-        return "auto_delete_hlblock";
+        return 'auto_delete_hlblock';
     }
 
     /**
@@ -66,7 +66,7 @@ class OnBeforeHLBlockDelete extends BaseHandler implements HandlerInterface
     {
         return [
             'fields' => var_export($this->fields, true),
-            'id' => $this->id,
+            'id'     => $this->id,
         ];
     }
 }

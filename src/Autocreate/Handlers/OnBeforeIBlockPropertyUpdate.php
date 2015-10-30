@@ -19,6 +19,7 @@ class OnBeforeIBlockPropertyUpdate extends BaseHandler implements HandlerInterfa
      * Constructor.
      *
      * @param array $params
+     *
      * @throws SkipHandlerException
      */
     public function __construct($params)
@@ -49,7 +50,7 @@ class OnBeforeIBlockPropertyUpdate extends BaseHandler implements HandlerInterfa
      */
     public function getTemplate()
     {
-        return "auto_update_iblock_element_property";
+        return 'auto_update_iblock_element_property';
     }
 
     /**
@@ -60,9 +61,9 @@ class OnBeforeIBlockPropertyUpdate extends BaseHandler implements HandlerInterfa
     public function getReplace()
     {
         return [
-            'fields' => var_export($this->fields, true),
+            'fields'   => var_export($this->fields, true),
             'iblockId' => $this->fields['IBLOCK_ID'],
-            'code' => "'".$this->fields['CODE']."'",
+            'code'     => "'".$this->fields['CODE']."'",
         ];
     }
 
@@ -77,22 +78,22 @@ class OnBeforeIBlockPropertyUpdate extends BaseHandler implements HandlerInterfa
         $fields['VALUES'] = [];
 
         $filter = [
-            "IBLOCK_ID"   => $this->fields['IBLOCK_ID'],
-            "PROPERTY_ID" => $this->fields['ID'],
+            'IBLOCK_ID'   => $this->fields['IBLOCK_ID'],
+            'PROPERTY_ID' => $this->fields['ID'],
         ];
         $sort = [
-            "SORT" => "ASC",
-            "VALUE" => "ASC",
+            'SORT'  => 'ASC',
+            'VALUE' => 'ASC',
         ];
 
         $propertyEnums = CIBlockPropertyEnum::GetList($sort, $filter);
-        while($v = $propertyEnums->GetNext()) {
+        while ($v = $propertyEnums->GetNext()) {
             $fields['VALUES'][$v['ID']] = [
-                'ID' => $v['ID'],
-                'VALUE' => $v['VALUE'],
-                'SORT' => $v['SORT'],
+                'ID'     => $v['ID'],
+                'VALUE'  => $v['VALUE'],
+                'SORT'   => $v['SORT'],
                 'XML_ID' => $v['XML_ID'],
-                'DEF' => $v['DEF'],
+                'DEF'    => $v['DEF'],
             ];
         }
 

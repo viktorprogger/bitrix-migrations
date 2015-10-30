@@ -10,6 +10,7 @@ class OnBeforeGroupAdd extends BaseHandler implements HandlerInterface
      * Constructor.
      *
      * @param array $params
+     *
      * @throws StopHandlerException
      */
     public function __construct($params)
@@ -17,7 +18,7 @@ class OnBeforeGroupAdd extends BaseHandler implements HandlerInterface
         $this->fields = $params[0];
 
         if (!$this->fields['STRING_ID']) {
-            throw new StopHandlerException("Code is required to create a migration");
+            throw new StopHandlerException('Code is required to create a migration');
         }
     }
 
@@ -38,7 +39,7 @@ class OnBeforeGroupAdd extends BaseHandler implements HandlerInterface
      */
     public function getTemplate()
     {
-        return "auto_add_group";
+        return 'auto_add_group';
     }
 
     /**

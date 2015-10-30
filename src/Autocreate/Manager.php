@@ -7,8 +7,8 @@ use Arrilot\BitrixMigrations\Exceptions\SkipHandlerException;
 use Arrilot\BitrixMigrations\Exceptions\StopHandlerException;
 use Arrilot\BitrixMigrations\Migrator;
 use Arrilot\BitrixMigrations\TemplatesCollection;
-use Bitrix\Main\EventManager;
 use Bitrix\Main\Entity\EventResult;
+use Bitrix\Main\EventManager;
 
 class Manager
 {
@@ -31,26 +31,26 @@ class Manager
      */
     protected static $handlers = [
         'iblock' => [
-            'OnBeforeIBlockAdd' => 'OnBeforeIBlockAdd',
-            'OnBeforeIBlockUpdate' => 'OnBeforeIBlockUpdate',
-            'OnBeforeIBlockDelete' => 'OnBeforeIBlockDelete',
-            'OnBeforeIBlockPropertyAdd' => 'OnBeforeIBlockPropertyAdd',
+            'OnBeforeIBlockAdd'            => 'OnBeforeIBlockAdd',
+            'OnBeforeIBlockUpdate'         => 'OnBeforeIBlockUpdate',
+            'OnBeforeIBlockDelete'         => 'OnBeforeIBlockDelete',
+            'OnBeforeIBlockPropertyAdd'    => 'OnBeforeIBlockPropertyAdd',
             'OnBeforeIBlockPropertyUpdate' => 'OnBeforeIBlockPropertyUpdate',
             'OnBeforeIBlockPropertyDelete' => 'OnBeforeIBlockPropertyDelete',
         ],
         'main' => [
-            'OnBeforeUserTypeAdd' => 'OnBeforeUserTypeAdd',
+            'OnBeforeUserTypeAdd'    => 'OnBeforeUserTypeAdd',
             'OnBeforeUserTypeDelete' => 'OnBeforeUserTypeDelete',
-            'OnAfterEpilog' => 'DeleteNotificationFromPreviousMigration',
-            'OnBeforeGroupAdd' => 'OnBeforeGroupAdd',
-            'OnBeforeGroupUpdate' => 'OnBeforeGroupUpdate',
-            'OnBeforeGroupDelete' => 'OnBeforeGroupDelete',
+            'OnAfterEpilog'          => 'DeleteNotificationFromPreviousMigration',
+            'OnBeforeGroupAdd'       => 'OnBeforeGroupAdd',
+            'OnBeforeGroupUpdate'    => 'OnBeforeGroupUpdate',
+            'OnBeforeGroupDelete'    => 'OnBeforeGroupDelete',
         ],
         'highloadblock' => [
-            '\\Bitrix\\Highloadblock\\Highloadblock::OnBeforeAdd' => 'OnBeforeHLBlockAdd',
+            '\\Bitrix\\Highloadblock\\Highloadblock::OnBeforeAdd'    => 'OnBeforeHLBlockAdd',
             '\\Bitrix\\Highloadblock\\Highloadblock::OnBeforeUpdate' => 'OnBeforeHLBlockUpdate',
             '\\Bitrix\\Highloadblock\\Highloadblock::OnBeforeDelete' => 'OnBeforeHLBlockDelete',
-        ]
+        ],
     ];
 
     /**
@@ -118,7 +118,7 @@ class Manager
      * Magic static call to a handler.
      *
      * @param string $method
-     * @param array $parameters
+     * @param array  $parameters
      *
      * @return mixed
      */
@@ -141,8 +141,7 @@ class Manager
             $handler = static::instantiateHandler($method, $parameters);
         } catch (SkipHandlerException $e) {
             return $eventResult;
-        }
-        catch (StopHandlerException $e) {
+        } catch (StopHandlerException $e) {
             global $APPLICATION;
             $APPLICATION->throwException($e->getMessage());
 
@@ -158,7 +157,7 @@ class Manager
      * Instantiate handler.
      *
      * @param string $handler
-     * @param array $parameters
+     * @param array  $parameters
      *
      * @return mixed
      */

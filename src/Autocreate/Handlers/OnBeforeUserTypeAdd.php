@@ -31,7 +31,7 @@ class OnBeforeUserTypeAdd extends BaseHandler implements HandlerInterface
      */
     public function getTemplate()
     {
-        return "auto_add_uf";
+        return 'auto_add_uf';
     }
 
     /**
@@ -43,7 +43,7 @@ class OnBeforeUserTypeAdd extends BaseHandler implements HandlerInterface
     {
         return [
             'fields' => var_export($this->fields, true),
-            'code' => "'".$this->fields['FIELD_NAME']."'",
+            'code'   => "'".$this->fields['FIELD_NAME']."'",
             'entity' => "'".$this->fields['ENTITY_ID']."'",
         ];
     }

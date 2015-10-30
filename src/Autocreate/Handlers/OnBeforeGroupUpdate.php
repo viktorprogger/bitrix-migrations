@@ -3,7 +3,6 @@
 namespace Arrilot\BitrixMigrations\Autocreate\Handlers;
 
 use Arrilot\BitrixMigrations\Exceptions\StopHandlerException;
-use CGroup;
 
 class OnBeforeGroupUpdate extends BaseHandler implements HandlerInterface
 {
@@ -18,6 +17,7 @@ class OnBeforeGroupUpdate extends BaseHandler implements HandlerInterface
      * Constructor.
      *
      * @param array $params
+     *
      * @throws StopHandlerException
      */
     public function __construct($params)
@@ -26,7 +26,7 @@ class OnBeforeGroupUpdate extends BaseHandler implements HandlerInterface
         $this->fields = $params[1];
 
         if (!$this->fields['STRING_ID']) {
-            throw new StopHandlerException("Code is required to create a migration");
+            throw new StopHandlerException('Code is required to create a migration');
         }
     }
 
@@ -47,7 +47,7 @@ class OnBeforeGroupUpdate extends BaseHandler implements HandlerInterface
      */
     public function getTemplate()
     {
-        return "auto_update_group";
+        return 'auto_update_group';
     }
 
     /**
@@ -59,7 +59,7 @@ class OnBeforeGroupUpdate extends BaseHandler implements HandlerInterface
     {
         return [
             'fields' => var_export($this->fields, true),
-            'id' => $this->id,
+            'id'     => $this->id,
         ];
     }
 }

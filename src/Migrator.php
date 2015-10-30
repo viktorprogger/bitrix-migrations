@@ -50,10 +50,10 @@ class Migrator
     /**
      * Constructor.
      *
-     * @param array $config
-     * @param TemplatesCollection $templates
+     * @param array                    $config
+     * @param TemplatesCollection      $templates
      * @param DatabaseStorageInterface $database
-     * @param FileStorageInterface $files
+     * @param FileStorageInterface     $files
      */
     public function __construct($config, TemplatesCollection $templates, DatabaseStorageInterface $database = null, FileStorageInterface $files = null)
     {
@@ -68,9 +68,9 @@ class Migrator
     /**
      * Create migration file.
      *
-     * @param string $name - migration name
+     * @param string $name         - migration name
      * @param string $templateName
-     * @param array $replace - array of placeholders that should be replaced with a given values.
+     * @param array  $replace      - array of placeholders that should be replaced with a given values.
      *
      * @return string
      */
@@ -115,9 +115,9 @@ class Migrator
      *
      * @param string $file
      *
-     * @return string
-     *
      * @throws Exception
+     *
+     * @return string
      */
     public function runMigration($file)
     {
@@ -143,7 +143,7 @@ class Migrator
     }
 
     /**
-     * Get ran migrations
+     * Get ran migrations.
      *
      * @return array
      */
@@ -156,6 +156,7 @@ class Migrator
      * Determine whether migration file for migration exists.
      *
      * @param string $migration
+     *
      * @return bool
      */
     public function doesMigrationFileExist($migration)
@@ -167,8 +168,10 @@ class Migrator
      * Rollback a given migration.
      *
      * @param string $file
-     * @return mixed
+     *
      * @throws Exception
+     *
+     * @return mixed
      */
     public function rollbackMigration($file)
     {
@@ -230,7 +233,7 @@ class Migrator
      * Replace all placeholders in the stub.
      *
      * @param string $template
-     * @param array $replace
+     * @param array  $replace
      *
      * @return string
      */
@@ -261,8 +264,10 @@ class Migrator
      * Resolve a migration instance from a file.
      *
      * @param string $file
-     * @return MigrationInterface
+     *
      * @throws Exception
+     *
+     * @return MigrationInterface
      */
     protected function getMigrationObjectByFileName($file)
     {

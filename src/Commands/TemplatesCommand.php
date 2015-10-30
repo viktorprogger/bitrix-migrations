@@ -9,7 +9,7 @@ use Symfony\Component\Console\Helper\TableSeparator;
 class TemplatesCommand extends AbstractCommand
 {
     /**
-     * TemplatesCollection instance
+     * TemplatesCollection instance.
      *
      * @var TemplatesCollection
      */

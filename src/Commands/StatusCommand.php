@@ -7,7 +7,7 @@ use Arrilot\BitrixMigrations\Migrator;
 class StatusCommand extends AbstractCommand
 {
     /**
-     * Migrator instance
+     * Migrator instance.
      *
      * @var Migrator
      */
@@ -48,7 +48,7 @@ class StatusCommand extends AbstractCommand
     }
 
     /**
-     * Show old migrations
+     * Show old migrations.
      *
      * @return void
      */
@@ -60,7 +60,7 @@ class StatusCommand extends AbstractCommand
 
         $max = 5;
         if ($old->count() > $max) {
-            $this->output->writeln("<fg=yellow>...</>");
+            $this->output->writeln('<fg=yellow>...</>');
 
             $old = $old->take(-$max);
         }
@@ -68,11 +68,10 @@ class StatusCommand extends AbstractCommand
         foreach ($old as $migration) {
             $this->output->writeln("<fg=yellow>{$migration}.php</>");
         }
-
     }
 
     /**
-     * Show new migrations
+     * Show new migrations.
      *
      * @return void
      */
@@ -85,6 +84,5 @@ class StatusCommand extends AbstractCommand
         foreach ($new as $migration) {
             $this->output->writeln("<fg=green>{$migration}.php</>");
         }
-
     }
 }

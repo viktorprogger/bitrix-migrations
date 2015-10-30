@@ -21,6 +21,7 @@ abstract class CommandTestCase extends PHPUnit_Framework_TestCase
     /**
      * @param $command
      * @param array $input
+     *
      * @return mixed
      */
     protected function runCommand(Command $command, $input = [])

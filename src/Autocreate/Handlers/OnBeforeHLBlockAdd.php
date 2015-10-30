@@ -3,7 +3,6 @@
 namespace Arrilot\BitrixMigrations\Autocreate\Handlers;
 
 use Arrilot\BitrixMigrations\Exceptions\SkipHandlerException;
-use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Entity\Event;
 
 class OnBeforeHLBlockAdd extends BaseHandler implements HandlerInterface
@@ -24,7 +23,7 @@ class OnBeforeHLBlockAdd extends BaseHandler implements HandlerInterface
     {
         $this->event = $params[0];
 
-        $this->fields= $this->event->getParameter('fields');
+        $this->fields = $this->event->getParameter('fields');
     }
 
     /**
@@ -34,7 +33,7 @@ class OnBeforeHLBlockAdd extends BaseHandler implements HandlerInterface
      */
     public function getName()
     {
-        return "auto_add_hlblock_".$this->fields['TABLE_NAME'];
+        return 'auto_add_hlblock_'.$this->fields['TABLE_NAME'];
     }
 
     /**
@@ -44,7 +43,7 @@ class OnBeforeHLBlockAdd extends BaseHandler implements HandlerInterface
      */
     public function getTemplate()
     {
-        return "auto_add_hlblock";
+        return 'auto_add_hlblock';
     }
 
     /**

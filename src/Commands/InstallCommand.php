@@ -23,7 +23,7 @@ class InstallCommand extends AbstractCommand
     /**
      * Constructor.
      *
-     * @param array                       $config
+     * @param array                    $config
      * @param DatabaseStorageInterface $database
      */
     public function __construct($config, DatabaseStorageInterface $database)

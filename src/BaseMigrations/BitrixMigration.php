@@ -63,7 +63,7 @@ class BitrixMigration implements MigrationInterface
         }
 
         $filter = [
-            'CODE' => $code,
+            'CODE'              => $code,
             'CHECK_PERMISSIONS' => 'N',
         ];
 
@@ -207,9 +207,9 @@ class BitrixMigration implements MigrationInterface
      * @param $code
      * @param $iblockId
      *
-     * @return array
-     *
      * @throws MigrationException
+     *
+     * @return array
      */
     protected function getIblockPropIdByCode($code, $iblockId)
     {

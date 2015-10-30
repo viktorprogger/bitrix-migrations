@@ -33,7 +33,7 @@ class OnBeforeIBlockPropertyDelete extends BaseHandler implements HandlerInterfa
      */
     public function getTemplate()
     {
-        return "auto_delete_iblock_element_property";
+        return 'auto_delete_iblock_element_property';
     }
 
     /**
@@ -45,7 +45,7 @@ class OnBeforeIBlockPropertyDelete extends BaseHandler implements HandlerInterfa
     {
         return [
             'iblockId' => $this->fields['IBLOCK_ID'],
-            'code' => "'".$this->fields['CODE']."'",
+            'code'     => "'".$this->fields['CODE']."'",
         ];
     }
 }

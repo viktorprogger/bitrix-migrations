@@ -21,10 +21,10 @@ class Notifier
     public function newMigration($migration)
     {
         $notification = [
-            'MESSAGE' => 'Migration <strong>'.$migration.'</strong> has been created and applied.',
-            'TAG' => $this->tag,
-            'MODULE_ID' => 'main',
-            'ENABLE_CLOSE' => 'Y'
+            'MESSAGE'      => 'Migration <strong>'.$migration.'</strong> has been created and applied.',
+            'TAG'          => $this->tag,
+            'MODULE_ID'    => 'main',
+            'ENABLE_CLOSE' => 'Y',
         ];
 
         CAdminNotify::add($notification);

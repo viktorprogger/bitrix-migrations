@@ -18,6 +18,7 @@ class OnBeforeGroupDelete extends BaseHandler implements HandlerInterface
      * Constructor.
      *
      * @param array $params
+     *
      * @throws StopHandlerException
      */
     public function __construct($params)
@@ -44,7 +45,7 @@ class OnBeforeGroupDelete extends BaseHandler implements HandlerInterface
      */
     public function getTemplate()
     {
-        return "auto_delete_group";
+        return 'auto_delete_group';
     }
 
     /**

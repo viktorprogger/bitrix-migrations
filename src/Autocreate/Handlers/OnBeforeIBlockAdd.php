@@ -31,7 +31,7 @@ class OnBeforeIBlockAdd extends BaseHandler implements HandlerInterface
      */
     public function getTemplate()
     {
-        return "auto_add_iblock";
+        return 'auto_add_iblock';
     }
 
     /**
@@ -43,7 +43,7 @@ class OnBeforeIBlockAdd extends BaseHandler implements HandlerInterface
     {
         return [
             'fields' => var_export($this->fields, true),
-            'code' => "'".$this->fields['CODE']."'",
+            'code'   => "'".$this->fields['CODE']."'",
         ];
     }
 }
