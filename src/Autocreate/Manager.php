@@ -140,7 +140,6 @@ class Manager
         $notifier->newMigration($migration);
     }
 
-
     /**
      * Add event handlers.
      */
