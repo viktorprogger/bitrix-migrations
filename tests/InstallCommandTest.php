@@ -8,7 +8,7 @@ class InstallCommandTest extends CommandTestCase
 {
     protected function mockCommand($database)
     {
-        return m::mock('Arrilot\BitrixMigrations\Commands\InstallCommand[abort]', [$this->getConfig(), $database])
+        return m::mock('Arrilot\BitrixMigrations\Commands\InstallCommand[abort]', ['migrations', $database])
             ->shouldAllowMockingProtectedMethods();
     }
 

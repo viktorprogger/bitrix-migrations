@@ -55,7 +55,7 @@ class Manager
     /**
      * Initialize autocreation.
      *
-     * @param string $dir
+     * @param string      $dir
      * @param string|null $table
      */
     public static function init($dir, $table = null)
@@ -64,7 +64,7 @@ class Manager
         $templates->registerAutoTemplates();
 
         $config = [
-            'dir' => $dir,
+            'dir'   => $dir,
             'table' => is_null($table) ? 'migrations' : $table,
         ];
 
