@@ -38,7 +38,6 @@ class MigratorTest extends CommandTestCase
         $config = [
             'table'        => 'migrations',
             'dir'          => 'migrations',
-            'composerPath' => '/var/www/',
         ];
 
         $templatesCollection = new TemplatesCollection($config);

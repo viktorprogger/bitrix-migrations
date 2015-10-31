@@ -18,20 +18,19 @@ include $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.ph
 $config = [
     'table' => 'migrations',
     'dir' => './migrations',
-    'composerPath' => $_SERVER["DOCUMENT_ROOT"],
 ];
 
 $database = new BitrixDatabaseStorage($config['table']);
-$templatesCollection = new TemplatesCollection($config);
-$templatesCollection->registerBasicTemplates();
+$templates = new TemplatesCollection();
+$templates->registerBasicTemplates();
 
-$migrator = new Migrator($config, $templatesCollection, $database);
+$migrator = new Migrator($config, $templates, $database);
 
 $app = new Application('Migrator');
 $app->add(new MakeCommand($migrator));
-$app->add(new InstallCommand($config, $database));
+$app->add(new InstallCommand($config['table'], $database));
 $app->add(new MigrateCommand($migrator));
 $app->add(new RollbackCommand($migrator));
-$app->add(new TemplatesCommand($templatesCollection));
+$app->add(new TemplatesCommand($templates));
 $app->add(new StatusCommand($migrator));
 $app->run();

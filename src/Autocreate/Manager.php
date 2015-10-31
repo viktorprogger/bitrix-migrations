@@ -41,7 +41,6 @@ class Manager
         'main' => [
             'OnBeforeUserTypeAdd'    => 'OnBeforeUserTypeAdd',
             'OnBeforeUserTypeDelete' => 'OnBeforeUserTypeDelete',
-            'OnAfterEpilog'          => 'DeleteNotificationFromPreviousMigration',
             'OnBeforeGroupAdd'       => 'OnBeforeGroupAdd',
             'OnBeforeGroupUpdate'    => 'OnBeforeGroupUpdate',
             'OnBeforeGroupDelete'    => 'OnBeforeGroupDelete',
@@ -56,12 +55,18 @@ class Manager
     /**
      * Initialize autocreation.
      *
-     * @param $config
+     * @param string $dir
+     * @param string|null $table
      */
-    public static function init($config)
+    public static function init($dir, $table = null)
     {
-        $templates = new TemplatesCollection($config);
+        $templates = new TemplatesCollection();
         $templates->registerAutoTemplates();
+
+        $config = [
+            'dir' => $dir,
+            'table' => is_null($table) ? 'migrations' : $table,
+        ];
 
         static::$migrator = new Migrator($config, $templates);
 
@@ -101,59 +106,6 @@ class Manager
     }
 
     /**
-     * Add event handlers.
-     */
-    protected static function addEventHandlers()
-    {
-        $eventManager = EventManager::getInstance();
-
-        foreach (static::$handlers as $module => $handlers) {
-            foreach ($handlers as $event => $handler) {
-                $eventManager->addEventHandler($module, $event, [__CLASS__, $handler], false, 5000);
-            }
-        }
-    }
-
-    /**
-     * Magic static call to a handler.
-     *
-     * @param string $method
-     * @param array  $parameters
-     *
-     * @return mixed
-     */
-    public function __callStatic($method, $parameters)
-    {
-        $eventResult = new EventResult();
-
-        if (!static::isTurnedOn()) {
-            return $eventResult;
-        }
-
-        if ($method === 'DeleteNotificationFromPreviousMigration') {
-            $notifier = new Notifier();
-            $notifier->deleteNotificationFromPreviousMigration();
-
-            return $eventResult;
-        }
-
-        try {
-            $handler = static::instantiateHandler($method, $parameters);
-        } catch (SkipHandlerException $e) {
-            return $eventResult;
-        } catch (StopHandlerException $e) {
-            global $APPLICATION;
-            $APPLICATION->throwException($e->getMessage());
-
-            return false;
-        }
-
-        static::createMigration($handler);
-
-        return $eventResult;
-    }
-
-    /**
      * Instantiate handler.
      *
      * @param string $handler
@@ -186,5 +138,59 @@ class Manager
 
         $migrator->logSuccessfulMigration($migration);
         $notifier->newMigration($migration);
+    }
+
+
+    /**
+     * Add event handlers.
+     */
+    protected static function addEventHandlers()
+    {
+        $eventManager = EventManager::getInstance();
+
+        foreach (static::$handlers as $module => $handlers) {
+            foreach ($handlers as $event => $handler) {
+                $eventManager->addEventHandler($module, $event, [__CLASS__, $handler], false, 5000);
+            }
+        }
+
+        $eventManager->addEventHandler('main', 'OnAfterEpilog', function () {
+            $notifier = new Notifier();
+            $notifier->deleteNotificationFromPreviousMigration();
+
+            return new EventResult();
+        });
+    }
+
+    /**
+     * Magic static call to a handler.
+     *
+     * @param string $method
+     * @param array  $parameters
+     *
+     * @return mixed
+     */
+    public function __callStatic($method, $parameters)
+    {
+        $eventResult = new EventResult();
+
+        if (!static::isTurnedOn()) {
+            return $eventResult;
+        }
+
+        try {
+            $handler = static::instantiateHandler($method, $parameters);
+        } catch (SkipHandlerException $e) {
+            return $eventResult;
+        } catch (StopHandlerException $e) {
+            global $APPLICATION;
+            $APPLICATION->throwException($e->getMessage());
+
+            return false;
+        }
+
+        static::createMigration($handler);
+
+        return $eventResult;
     }
 }

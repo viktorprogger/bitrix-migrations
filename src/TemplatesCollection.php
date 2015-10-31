@@ -8,11 +8,11 @@ use RuntimeException;
 class TemplatesCollection
 {
     /**
-     * Configuration array.
+     * Path to directory where basic templates are.
      *
-     * @var array
+     * @var string
      */
-    protected $config;
+    protected $dir;
 
     /**
      * Array of available migration file templates.
@@ -23,16 +23,14 @@ class TemplatesCollection
 
     /**
      * Constructor.
-     *
-     * @param $config
      */
-    public function __construct($config)
+    public function __construct()
     {
-        $this->config = $config;
+        $this->dir = dirname(__DIR__).'/templates';
 
         $this->registerTemplate([
             'name'        => 'default',
-            'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/default.template',
+            'path'        => $this->dir.'/default.template',
             'description' => 'Default migration template',
         ]);
     }
@@ -45,17 +43,17 @@ class TemplatesCollection
         $templates = [
             [
                 'name'        => 'add_iblock',
-                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_iblock.template',
+                'path'        => $this->dir.'/add_iblock.template',
                 'description' => 'Add iblock',
             ],
             [
                 'name'        => 'add_iblock',
-                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_iblock.template',
+                'path'        => $this->dir.'/add_iblock.template',
                 'description' => 'Add iblock',
             ],
             [
                 'name'        => 'add_iblock_element_property',
-                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_iblock_element_property.template',
+                'path'        => $this->dir.'/add_iblock_element_property.template',
                 'description' => 'Add iblock element property',
                 'aliases'     => [
                     'add_iblock_prop',
@@ -66,7 +64,7 @@ class TemplatesCollection
             ],
             [
                 'name'        => 'add_table',
-                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/add_table.template',
+                'path'        => $this->dir.'/add_table.template',
                 'description' => 'Create table',
                 'aliases'     => [
                     'create_table',
@@ -74,7 +72,7 @@ class TemplatesCollection
             ],
             [
                 'name'        => 'delete_table',
-                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/delete_table.template',
+                'path'        => $this->dir.'/delete_table.template',
                 'description' => 'Drop table',
                 'aliases'     => [
                     'drop_table',
@@ -82,7 +80,7 @@ class TemplatesCollection
             ],
             [
                 'name'        => 'query',
-                'path'        => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/query.template',
+                'path'        => $this->dir.'/query.template',
                 'description' => 'Simple database query',
             ],
         ];
@@ -118,7 +116,7 @@ class TemplatesCollection
         foreach ($templates as $template) {
             $this->registerTemplate([
                 'name' => 'auto_'.$template,
-                'path' => $this->config['composerPath'].'/vendor/arrilot/bitrix-migrations/templates/auto/'.$template.'.template',
+                'path' => $this->dir.'/auto/'.$template.'.template',
             ]);
         }
     }

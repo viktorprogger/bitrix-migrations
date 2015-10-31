@@ -136,14 +136,11 @@
 Для его включения необходимо добавить примерно следующее в `init.php`
 
 ```php
-Arrilot\BitrixMigrations\Autocreate\Manager::init([
-    'table' => 'migrations',
-    'dir' => $_SERVER["DOCUMENT_ROOT"].'/migrations',
-    'composerPath' => $_SERVER["DOCUMENT_ROOT"],
-]);
+Arrilot\BitrixMigrations\Autocreate\Manager::init($_SERVER["DOCUMENT_ROOT"].'/migrations');
 ```
 
-В метод `Manager::init()` передается конфиг полностью аналогичный конфигу из файла `migrator`.
+В метод `Manager::init()` передается путь до директории аналогичной конфигу в файле `migrator`.
+
 После этого при выполнении ряда действий в админке будет происходить следующее
 
 1) Срабатывает битриксовый обработчик события
