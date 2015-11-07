@@ -34,7 +34,8 @@ class RollbackCommand extends AbstractCommand
     {
         $this->setName('rollback')
             ->setDescription('Rollback the last migration')
-            ->addOption('hard', null, InputOption::VALUE_NONE, 'Rollback without running down()');
+            ->addOption('hard', null, InputOption::VALUE_NONE, 'Rollback without running down()')
+            ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete migration file after rolling back');
     }
 
     /**
@@ -52,9 +53,18 @@ class RollbackCommand extends AbstractCommand
 
         $migration = $ran[count($ran) - 1];
 
-        return $this->input->getOption('hard')
+        $this->input->getOption('hard')
             ? $this->hardRollbackMigration($migration)
             : $this->rollbackMigration($migration);
+
+        if ($this->input->getOption('delete')) {
+            if ($this->migrator->deleteMigrationFile($migration)) {
+                $this->message("<info>Deleted:</info> {$migration}.php");
+            }
+
+        }
+
+        return null;
     }
 
     /**

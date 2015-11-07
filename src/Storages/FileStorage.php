@@ -101,4 +101,16 @@ class FileStorage implements FileStorageInterface
     {
         return file_exists($path);
     }
+
+    /**
+     * Delete file.
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    public function delete($path)
+    {
+        return $this->exists($path) ? unlink($path) : false;
+    }
 }

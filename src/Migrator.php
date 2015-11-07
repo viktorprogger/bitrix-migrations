@@ -197,6 +197,32 @@ class Migrator
     }
 
     /**
+     * Delete migration file.
+     *
+     * @param string $migration
+     *
+     * @return bool
+     */
+    public function deleteMigrationFile($migration)
+    {
+        return $this->files->delete($this->getMigrationFilePath($migration));
+    }
+
+    /**
+     * Get array of migrations that should be ran.
+     *
+     * @return array
+     */
+    public function getMigrationsToRun()
+    {
+        $allMigrations = $this->files->getMigrationFiles($this->dir);
+
+        $ranMigrations = $this->getRanMigrations();
+
+        return array_diff($allMigrations, $ranMigrations);
+    }
+
+    /**
      * Construct migration file name from migration name and current time.
      *
      * @param string $name
@@ -247,20 +273,6 @@ class Migrator
     }
 
     /**
-     * Get array of migrations that should be ran.
-     *
-     * @return array
-     */
-    public function getMigrationsToRun()
-    {
-        $allMigrations = $this->files->getMigrationFiles($this->dir);
-
-        $ranMigrations = $this->getRanMigrations();
-
-        return array_diff($allMigrations, $ranMigrations);
-    }
-
-    /**
      * Resolve a migration instance from a file.
      *
      * @param string $file
@@ -299,12 +311,12 @@ class Migrator
     /**
      * Get path to a migration file.
      *
-     * @param string $file
+     * @param string $migration
      *
      * @return string
      */
-    protected function getMigrationFilePath($file)
+    protected function getMigrationFilePath($migration)
     {
-        return $this->dir.'/'.$file.'.php';
+        return $this->dir.'/'.$migration.'.php';
     }
 }

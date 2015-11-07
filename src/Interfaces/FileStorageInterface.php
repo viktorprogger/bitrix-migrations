@@ -59,4 +59,13 @@ interface FileStorageInterface
      * @return bool
      */
     public function exists($path);
+
+    /**
+     * Delete file.
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    public function delete($path);
 }
