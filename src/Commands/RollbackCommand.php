@@ -57,14 +57,7 @@ class RollbackCommand extends AbstractCommand
             ? $this->hardRollbackMigration($migration)
             : $this->rollbackMigration($migration);
 
-        if ($this->input->getOption('delete')) {
-            if ($this->migrator->deleteMigrationFile($migration)) {
-                $this->message("<info>Deleted:</info> {$migration}.php");
-            }
-
-        }
-
-        return null;
+        return $this->deleteIfNeeded($migration);
     }
 
     /**
@@ -116,5 +109,23 @@ class RollbackCommand extends AbstractCommand
         }
 
         $this->migrator->removeSuccessfulMigrationFromLog($migration);
+    }
+
+    /**
+     * Delete migration file if options is set
+     *
+     * @param string $migration
+     *
+     * @return null
+     */
+    protected function deleteIfNeeded($migration)
+    {
+        if (!$this->input->getOption('delete')) {
+            return;
+        }
+
+        if ($this->migrator->deleteMigrationFile($migration)) {
+            $this->message("<info>Deleted:</info> {$migration}.php");
+        }
     }
 }
