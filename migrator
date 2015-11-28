@@ -12,6 +12,7 @@ use Arrilot\BitrixMigrations\Storages\BitrixDatabaseStorage;
 use Arrilot\BitrixMigrations\TemplatesCollection;
 use Symfony\Component\Console\Application;
 
+define("NOT_CHECK_PERMISSIONS", true);
 $_SERVER["DOCUMENT_ROOT"] = __DIR__;
 include $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php";
 
