@@ -8,6 +8,7 @@ use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
 use Arrilot\BitrixMigrations\Storages\BitrixDatabaseStorage;
 use Arrilot\BitrixMigrations\Storages\FileStorage;
 use Exception;
+use Illuminate\Support\Str;
 
 class Migrator
 {
@@ -251,7 +252,7 @@ class Migrator
         $datePart = implode('_', array_slice($fileExploded, 0, 5));
         $namePart = implode('_', array_slice($fileExploded, 5));
 
-        return Helpers::studly($namePart.'_'.$datePart);
+        return Str::studly($namePart.'_'.$datePart);
     }
 
     /**
