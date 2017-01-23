@@ -51,12 +51,13 @@ class BitrixMigration implements MigrationInterface
      * Find iblock id by its code.
      *
      * @param string $code
+     * @param null|string $iBlockType
      *
      * @throws MigrationException
      *
      * @return int
      */
-    protected function getIblockIdByCode($code)
+    protected function getIblockIdByCode($code, $iBlockType = null)
     {
         if (!$code) {
             throw new MigrationException('Не задан код инфоблока');
@@ -66,6 +67,10 @@ class BitrixMigration implements MigrationInterface
             'CODE'              => $code,
             'CHECK_PERMISSIONS' => 'N',
         ];
+
+        if ($iBlockType !== null) {
+            $filter['TYPE'] = $iBlockType;
+        }
 
         $iblock = (new CIBlock())->GetList([], $filter)->fetch();
 
