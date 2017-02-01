@@ -52,6 +52,11 @@ class TemplatesCollection
                 'description' => 'Add iblock',
             ],
             [
+                'name'        => 'add_iblock_type',
+                'path'        => $this->dir.'/add_iblock_type.template',
+                'description' => 'Add iblock type',
+            ],
+            [
                 'name'        => 'add_iblock_element_property',
                 'path'        => $this->dir.'/add_iblock_element_property.template',
                 'description' => 'Add iblock element property',
