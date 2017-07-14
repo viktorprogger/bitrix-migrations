@@ -28,7 +28,7 @@ class OnBeforeIBlockPropertyUpdate extends BaseHandler implements HandlerInterfa
 
         $this->dbFields = $this->collectPropertyFieldsFromDB();
 
-        if (!$this->propertyHasChanged()) {
+        if (!$this->propertyHasChanged() || !$this->fields['IBLOCK_ID']) {
             throw new SkipHandlerException();
         }
     }
