@@ -14,7 +14,9 @@
 
 2) `cp vendor/arrilot/bitrix-migrations/migrator migrator` - копируем исполняемый файл в удобное место.
 
-3) `php migrator install`
+3) заходим внутрь и удостоверяемся что задается правильный $_SERVER['DOCUMENT_ROOT']. Меняем настройки если нужно
+
+4) `php migrator install`
 
 Данная команда создаст в БД таблицу для хранения названий выполненных миграций.
 
