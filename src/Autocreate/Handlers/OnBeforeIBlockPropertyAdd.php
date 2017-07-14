@@ -2,16 +2,23 @@
 
 namespace Arrilot\BitrixMigrations\Autocreate\Handlers;
 
+use Arrilot\BitrixMigrations\Exceptions\SkipHandlerException;
+
 class OnBeforeIBlockPropertyAdd extends BaseHandler implements HandlerInterface
 {
     /**
      * Constructor.
      *
      * @param array $params
+     * @throws SkipHandlerException
      */
     public function __construct($params)
     {
         $this->fields = $params[0];
+
+        if (!$this->fields['IBLOCK_ID']) {
+            throw new SkipHandlerException();
+        }
     }
 
     /**

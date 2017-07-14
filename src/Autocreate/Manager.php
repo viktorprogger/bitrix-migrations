@@ -169,7 +169,7 @@ class Manager
      *
      * @return mixed
      */
-    public function __callStatic($method, $parameters)
+    public static function __callStatic($method, $parameters)
     {
         $eventResult = new EventResult();
 
