@@ -2,16 +2,26 @@
 
 namespace Arrilot\BitrixMigrations\Autocreate\Handlers;
 
+use Arrilot\BitrixMigrations\Exceptions\SkipHandlerException;
+
 class OnBeforeIBlockUpdate extends BaseHandler implements HandlerInterface
 {
     /**
      * Constructor.
      *
      * @param array $params
+     * @throws SkipHandlerException
      */
     public function __construct($params)
     {
         $this->fields = $params[0];
+
+        // Если кода нет то миграция создастся битая.
+        // Еще это позволяет решить проблему с тем что создается лишняя миграция для торгового каталога
+        // когда обновляют связанный с ним инфоблок.
+        if (!$this->fields['CODE']) {
+            throw new SkipHandlerException();
+        }
     }
 
     /**
