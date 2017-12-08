@@ -47,11 +47,6 @@ class TemplatesCollection
                 'description' => 'Add iblock',
             ],
             [
-                'name'        => 'add_iblock',
-                'path'        => $this->dir.'/add_iblock.template',
-                'description' => 'Add iblock',
-            ],
-            [
                 'name'        => 'add_iblock_type',
                 'path'        => $this->dir.'/add_iblock_type.template',
                 'description' => 'Add iblock type',
@@ -66,6 +61,11 @@ class TemplatesCollection
                     'add_element_prop',
                     'add_element_property',
                 ],
+            ],
+            [
+                'name'        => 'add_uf',
+                'path'        => $this->dir.'/add_uf.template',
+                'description' => 'Add user field (for sections, users e.t.c)',
             ],
             [
                 'name'        => 'add_table',
