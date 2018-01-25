@@ -2,6 +2,8 @@
 
 namespace Arrilot\BitrixMigrations;
 
+use Arrilot\BitrixIblockHelper\HLBlock;
+use Arrilot\BitrixIblockHelper\IblockId;
 use Arrilot\BitrixMigrations\Interfaces\DatabaseStorageInterface;
 use Arrilot\BitrixMigrations\Interfaces\FileStorageInterface;
 use Arrilot\BitrixMigrations\Interfaces\MigrationInterface;
@@ -121,6 +123,8 @@ class Migrator
     public function runMigration($file)
     {
         $migration = $this->getMigrationObjectByFileName($file);
+
+        $this->disableBitrixIblockHelperCache();
 
         if ($migration->up() === false) {
             throw new Exception("Migration up from {$file}.php returned false");
@@ -317,5 +321,25 @@ class Migrator
     protected function getMigrationFilePath($migration)
     {
         return $this->dir.'/'.$migration.'.php';
+    }
+
+    /**
+     * If package arrilot/bitrix-iblock-helper is loaded then we should disable its caching to avoid problems.
+     */
+    private function disableBitrixIblockHelperCache()
+    {
+        if (class_exists('\\Arrilot\\BitrixIblockHelper\\IblockId')) {
+            IblockId::setCacheTime(0);
+            if (method_exists('\\Arrilot\\BitrixIblockHelper\\IblockId', 'flushLocalCache')) {
+                IblockId::flushLocalCache();
+            }
+        }
+
+        if (class_exists('\\Arrilot\\BitrixIblockHelper\\HLBlock')) {
+            HLBlock::setCacheTime(0);
+            if (method_exists('\\Arrilot\\BitrixIblockHelper\\HLBlock', 'flushLocalCache')) {
+                HLBlock::flushLocalCache();
+            }
+        }
     }
 }
