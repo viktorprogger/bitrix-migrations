@@ -191,6 +191,20 @@ class IBlock
     }
 
     /**
+     * URL детальной страницы элемента.
+     *
+     * @param string $detailPageUrl
+     *
+     * @return $this
+     */
+    public function setDetailPageUrl($detailPageUrl)
+    {
+        $this->fields['DETAIL_PAGE_URL'] = $detailPageUrl;
+
+        return $this;
+    }
+
+    /**
      * Код картинки в таблице файлов.
      * @param array $picture
      * @return $this
