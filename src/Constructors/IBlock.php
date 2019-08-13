@@ -205,6 +205,38 @@ class IBlock
     }
 
     /**
+     * Устанавливает значения по умолчанию для страниц инфоблока, раздела и деталей элемента
+     * (как при создании через административный интерфейс или с ЧПУ).
+     *
+     * Для использовании ЧПУ рекомендуется сделать обязательными для заполнения символьный код
+     * элементов и разделов инфоблока.
+     *
+     * @param bool sef Использовать ли ЧПУ (понадобится добавить правило в urlrewrite)
+     *
+     * @return IBlock
+     */
+    public function setDefaultUrls($sef = false)
+    {
+        if ($sef === true) {
+            $prefix = "#SITE_DIR#/#IBLOCK_TYPE_ID#/#IBLOCK_CODE#/";
+            $this
+                ->setListPageUrl($prefix)
+                ->setSectionPageUrl("$prefix#SECTION_CODE_PATH#/")
+                ->setDetailPageUrl("$prefix#SECTION_CODE_PATH#/#ELEMENT_CODE#/");
+
+            Logger::log('Рекомендуется сделать обязательными для заполнения символьный код элементов и разделов инфоблока.', Logger::COLOR_YELLOW);
+        } else {
+            $prefix = "#SITE_DIR#/#IBLOCK_TYPE_ID#";
+            $this
+                ->setListPageUrl("$prefix/index.php?ID=#IBLOCK_ID#")
+                ->setSectionPageUrl("$prefix/list.php?SECTION_ID=#SECTION_ID#")
+                ->setDetailPageUrl("$prefix/detail.php?ID=#ELEMENT_ID#");
+        }
+
+        return $this;
+    }
+
+    /**
      * Код картинки в таблице файлов.
      * @param array $picture
      * @return $this
