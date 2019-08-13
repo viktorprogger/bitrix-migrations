@@ -107,7 +107,7 @@ class IBlock
     }
 
     /**
-     * Внешний код.
+     * Код типа инфоблока
      * @param string $iblockTypeId
      * @return $this
      */
