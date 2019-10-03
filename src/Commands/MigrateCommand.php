@@ -16,13 +16,14 @@ class MigrateCommand extends AbstractCommand
     /**
      * Constructor.
      *
-     * @param Migrator $migrator
+     * @param Migrator    $migrator
+     * @param string|null $name
      */
-    public function __construct(Migrator $migrator)
+    public function __construct(Migrator $migrator, $name = null)
     {
         $this->migrator = $migrator;
 
-        parent::__construct();
+        parent::__construct($name);
     }
 
     /**

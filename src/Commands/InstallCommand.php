@@ -25,13 +25,14 @@ class InstallCommand extends AbstractCommand
      *
      * @param string                   $table
      * @param DatabaseStorageInterface $database
+     * @param string|null              $name
      */
-    public function __construct($table, DatabaseStorageInterface $database)
+    public function __construct($table, DatabaseStorageInterface $database, $name = null)
     {
         $this->table = $table;
         $this->database = $database;
 
-        parent::__construct();
+        parent::__construct($name);
     }
 
     /**
