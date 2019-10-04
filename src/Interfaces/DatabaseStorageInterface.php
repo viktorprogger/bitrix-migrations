@@ -5,6 +5,12 @@ namespace Arrilot\BitrixMigrations\Interfaces;
 interface DatabaseStorageInterface
 {
     /**
+     * Returns a DB table name if it was set
+     * @return string|null
+     */
+    public function getTableName();
+
+    /**
      * Check if a given table already exists.
      *
      * @return bool
