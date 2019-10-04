@@ -13,6 +13,7 @@ class ArchiveCommand extends AbstractCommand
      * @var Migrator
      */
     protected $migrator;
+    protected static $defaultName = 'archive';
 
     /**
      * Constructor.
@@ -32,8 +33,7 @@ class ArchiveCommand extends AbstractCommand
      */
     protected function configure()
     {
-        $this->setName('archive')
-            ->setDescription('Move migration into archive')
+        $this->setDescription('Move migration into archive')
             ->addOption('without', 'w', InputOption::VALUE_REQUIRED, 'Archive without last N migration');
     }
 

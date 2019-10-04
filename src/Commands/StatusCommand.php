@@ -13,6 +13,8 @@ class StatusCommand extends AbstractCommand
      */
     protected $migrator;
 
+    protected static $defaultName = 'status';
+
     /**
      * Constructor.
      *
@@ -31,7 +33,7 @@ class StatusCommand extends AbstractCommand
      */
     protected function configure()
     {
-        $this->setName('status')->setDescription('Show status about last migrations');
+        $this->setDescription('Show status about last migrations');
     }
 
     /**

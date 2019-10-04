@@ -15,6 +15,8 @@ class TemplatesCommand extends AbstractCommand
      */
     protected $collection;
 
+    protected static $defaultName = 'templates';
+
     /**
      * Constructor.
      *
@@ -33,7 +35,7 @@ class TemplatesCommand extends AbstractCommand
      */
     protected function configure()
     {
-        $this->setName('templates')->setDescription('Show the list of available migration templates');
+        $this->setDescription('Show the list of available migration templates');
     }
 
     /**
