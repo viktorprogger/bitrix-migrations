@@ -122,4 +122,12 @@ class BitrixDatabaseStorage implements DatabaseStorageInterface
     {
         $this->db->Rollback();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTableName()
+    {
+        return $this->table;
+    }
 }
