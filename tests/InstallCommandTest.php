@@ -8,7 +8,7 @@ class InstallCommandTest extends CommandTestCase
 {
     protected function mockCommand($database)
     {
-        return m::mock('Arrilot\BitrixMigrations\Commands\InstallCommand[abort]', ['migrations', $database])
+        return m::mock('Arrilot\BitrixMigrations\Commands\InstallCommand[abort]', [$database])
             ->shouldAllowMockingProtectedMethods();
     }
 
@@ -16,6 +16,7 @@ class InstallCommandTest extends CommandTestCase
     {
         $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseStorageInterface');
         $database->shouldReceive('checkMigrationTableExistence')->once()->andReturn(false);
+        $database->shouldReceive('getTableName')->once()->andReturn('migrations');
         $database->shouldReceive('createMigrationTable')->once();
 
         $command = $this->mockCommand($database);
@@ -27,6 +28,7 @@ class InstallCommandTest extends CommandTestCase
     {
         $database = m::mock('Arrilot\BitrixMigrations\Interfaces\DatabaseStorageInterface');
         $database->shouldReceive('checkMigrationTableExistence')->once()->andReturn(true);
+        $database->shouldReceive('getTableName')->once()->andReturn('migrations');
         $database->shouldReceive('createMigrationTable')->never();
 
         $command = $this->mockCommand($database);
