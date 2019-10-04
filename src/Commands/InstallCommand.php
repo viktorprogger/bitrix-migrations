@@ -20,6 +20,8 @@ class InstallCommand extends AbstractCommand
      */
     protected $table;
 
+    protected static $defaultName = 'install';
+
     /**
      * Constructor.
      *
@@ -40,7 +42,7 @@ class InstallCommand extends AbstractCommand
      */
     protected function configure()
     {
-        $this->setName('install')->setDescription('Create the migration database table');
+        $this->setDescription('Create the migration database table');
     }
 
     /**

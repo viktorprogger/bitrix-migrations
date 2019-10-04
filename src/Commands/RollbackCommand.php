@@ -15,6 +15,8 @@ class RollbackCommand extends AbstractCommand
      */
     protected $migrator;
 
+    protected static $defaultName = 'rollback';
+
     /**
      * Constructor.
      *
@@ -33,8 +35,7 @@ class RollbackCommand extends AbstractCommand
      */
     protected function configure()
     {
-        $this->setName('rollback')
-            ->setDescription('Rollback the last migration')
+        $this->setDescription('Rollback the last migration')
             ->addOption('hard', null, InputOption::VALUE_NONE, 'Rollback without running down()')
             ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete migration file after rolling back');
     }
